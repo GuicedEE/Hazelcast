@@ -27,8 +27,9 @@
 
         <dependency>
             <groupId>com.jwebmp</groupId>
-            <artifactId>log-master</artifactId>
+            <artifactId>guiced-log-master</artifactId>
             <version>${project.version}</version>
+            <type>jar</type>
         </dependency>
 
         <dependency>
@@ -69,6 +70,11 @@
         <dependency>
             <groupId>com.hazelcast</groupId>
             <artifactId>hazelcast-client</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
         </dependency>
 
     </dependencies>
