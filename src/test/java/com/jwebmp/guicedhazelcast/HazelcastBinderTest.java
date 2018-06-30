@@ -1,6 +1,6 @@
 package com.jwebmp.guicedhazelcast;
 
-import com.jwebmp.guiceinjection.GuiceContext;
+import com.jwebmp.guicedinjection.GuiceContext;
 import com.jwebmp.logger.LogFactory;
 import com.jwebmp.logger.logging.LogColourFormatter;
 import org.junit.jupiter.api.Assertions;
@@ -16,7 +16,6 @@ class HazelcastBinderTest
 	private static HazelcastBinderTest test;
 
 	private String returnTest = "Not this one";
-
 
 	@Test
 	public void testCaching()

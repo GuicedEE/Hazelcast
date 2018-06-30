@@ -1,6 +1,6 @@
 package com.jwebmp.guicedhazelcast;
 
-import com.jwebmp.guiceinjection.scanners.FileContentsScanner;
+import com.jwebmp.guicedinjection.scanners.FileContentsScanner;
 import io.github.lukehutch.fastclasspathscanner.matchprocessor.FileMatchContentsProcessorWithContext;
 import org.apache.commons.io.IOUtils;
 

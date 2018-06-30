@@ -1,7 +1,7 @@
 package com.jwebmp.guicedhazelcast;
 
-import com.jwebmp.guiceinjection.abstractions.GuiceInjectorModule;
-import com.jwebmp.guiceinjection.interfaces.GuiceDefaultBinder;
+import com.jwebmp.guicedinjection.abstractions.GuiceInjectorModule;
+import com.jwebmp.guicedinjection.interfaces.GuiceDefaultBinder;
 import com.jwebmp.logger.LogFactory;
 import org.jsr107.ri.annotations.guice.module.CacheAnnotationsModule;
 
