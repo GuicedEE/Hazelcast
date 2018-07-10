@@ -31,12 +31,14 @@
             <groupId>com.jwebmp</groupId>
             <artifactId>guiced-injection</artifactId>
             <version>${project.version}</version>
+            <classifier>${jwebmp.runtime.classifier}</classifier>
         </dependency>
 
         <dependency>
             <groupId>com.jwebmp</groupId>
             <artifactId>jwebmp-log-master</artifactId>
             <version>${project.version}</version>
+            <classifier>${jwebmp.runtime.classifier}</classifier>
             <type>jar</type>
         </dependency>
 
@@ -45,6 +47,7 @@
             <artifactId>guiced-persistence</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
+            <classifier>${jwebmp.runtime.classifier}</classifier>
         </dependency>
 
         <dependency>
@@ -116,6 +119,7 @@
             <artifactId>guiced-persistence-jpa</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
+            <classifier>${jwebmp.runtime.classifier}</classifier>
         </dependency>
 
     </dependencies>
