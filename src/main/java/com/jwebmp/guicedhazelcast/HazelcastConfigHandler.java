@@ -29,7 +29,7 @@ public class HazelcastConfigHandler
 	/**
 	 * Returns any found hazel cast config file
 	 *
-	 * @return
+	 * @return the byte array or null
 	 */
 	public static byte[] getHazelcastConfig()
 	{
@@ -47,6 +47,7 @@ public class HazelcastConfigHandler
 		HazelcastConfigHandler.hazelcastConfigFileName = hazelcastConfigFileName;
 	}
 
+	@SuppressWarnings("ResultOfMethodCallIgnored")
 	@Override
 	public Map<String, FileMatchContentsProcessorWithContext> onMatch()
 	{
@@ -79,6 +80,7 @@ public class HazelcastConfigHandler
 		return map;
 	}
 
+	@SuppressWarnings("WeakerAccess")
 	@NotNull
 	public static String getTempDir() throws IOException
 	{

@@ -16,11 +16,15 @@ public class HazelcastBinder
 		extends GuiceDefaultBinder
 {
 	private static final Logger log = LogFactory.getLog("HazelcastBinder");
+	private static boolean registerCacheModule = true;
 
 	@Override
 	public void onBind(GuiceInjectorModule module)
 	{
-		log.log(Level.CONFIG, "Registering Cache Annotations Module");
-		module.install(new CacheAnnotationsModule());
+		if (registerCacheModule)
+		{
+			log.log(Level.CONFIG, "Registering Cache Annotations Module");
+			module.install(new CacheAnnotationsModule());
+		}
 	}
 }
