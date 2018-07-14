@@ -18,20 +18,13 @@
     </description>
     <url>https://github.com/GedMarc/GuicedHazelcast</url>
 
-    <repositories>
-        <repository>
-            <id>jwebmp-snapshot</id>
-            <name>JWebMPArtifactory-snapshots</name>
-            <url>https://jwebmp.com/artifactory/libs-snapshot</url>
-        </repository>
-    </repositories>
-
     <dependencies>
         <dependency>
             <groupId>com.jwebmp</groupId>
             <artifactId>guiced-injection</artifactId>
             <version>${project.version}</version>
             <classifier>${jwebmp.runtime.classifier}</classifier>
+            <type>jar</type>
         </dependency>
 
         <dependency>
@@ -46,8 +39,8 @@
             <groupId>com.jwebmp</groupId>
             <artifactId>guiced-persistence</artifactId>
             <version>${project.version}</version>
-            <scope>compile</scope>
             <classifier>${jwebmp.runtime.classifier}</classifier>
+            <type>jar</type>
         </dependency>
 
         <dependency>
