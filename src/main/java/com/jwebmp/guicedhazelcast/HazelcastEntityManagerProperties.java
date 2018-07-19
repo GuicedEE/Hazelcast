@@ -1,7 +1,7 @@
 package com.jwebmp.guicedhazelcast;
 
 import com.jwebmp.guicedpersistence.db.PropertiesEntityManagerReader;
-import com.jwebmp.logger.LogFactory;
+import com.oracle.jaxb21.PersistenceUnit;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,11 +20,11 @@ public class HazelcastEntityManagerProperties
 	private static String instanceName;
 
 	@Override
-	public Map<String, String> processProperties(Properties incomingProperties)
+	public Map<String, String> processProperties(PersistenceUnit persistenceUnit, Properties incomingProperties)
 	{
 		Map<String, String> props = new HashMap<>();
 
-		props.put("hibernate.cache.region.factory_class", "org.hibernate.cache.jcache.JCacheRegionFactory");
+		props.put("hibernate.cache.region.factory_class", "org.hibernate.cache.jcache.internal.JCacheRegionFactory");
 		props.put("hibernate.javax.cache.provider", "com.hazelcast.client.cache.impl.HazelcastClientCachingProvider");
 
 		props.put("hibernate.cache.use_second_level_cache", "true");
