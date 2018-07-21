@@ -1,6 +1,6 @@
 package com.jwebmp.guicedhazelcast;
 
-import com.jwebmp.guicedinjection.scanners.FileContentsScanner;
+import com.jwebmp.guicedinjection.interfaces.IFileContentsScanner;
 import io.github.lukehutch.fastclasspathscanner.matchprocessor.FileMatchContentsProcessorWithContext;
 import org.apache.commons.io.IOUtils;
 
@@ -18,7 +18,7 @@ import java.util.logging.Logger;
  */
 @SuppressWarnings("unused")
 public class HazelcastConfigHandler
-		implements FileContentsScanner
+		implements IFileContentsScanner
 {
 	private static final Logger log = Logger.getLogger("HazelcastConfigHandler");
 

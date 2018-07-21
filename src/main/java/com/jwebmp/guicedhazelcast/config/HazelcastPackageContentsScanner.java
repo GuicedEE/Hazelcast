@@ -1,11 +1,12 @@
 package com.jwebmp.guicedhazelcast.config;
 
-import com.jwebmp.guicedinjection.scanners.PackageContentsScanner;
+import com.jwebmp.guicedinjection.interfaces.IPackageContentsScanner;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public class HazelcastPackageContentsScanner implements PackageContentsScanner
+public class HazelcastPackageContentsScanner
+		implements IPackageContentsScanner
 {
 	@Override
 	public Set<String> searchFor()
