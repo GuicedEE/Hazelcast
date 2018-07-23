@@ -55,7 +55,7 @@ public class HazelcastConfigHandler
 		Map<String, FileMatchContentsProcessorWithContext> map = new HashMap<>();
 		FileMatchContentsProcessorWithContext processor = (classpathElt, relativePath, fileContents) ->
 		{
-			log.log(Level.INFO, "Hazelcast client found in class path - " + classpathElt.getCanonicalPath() + ". Sending to temp directory [" + getTempDir() + "]");
+			log.log(Level.FINE, "Hazelcast client found in class path - " + classpathElt.getCanonicalPath() + ". Sending to temp directory [" + getTempDir() + "]");
 			hazelcastConfig = fileContents;
 			File hazelTempFile = new File(getTempDir() + hazelcastConfigFileName);
 			if (hazelTempFile.exists())
