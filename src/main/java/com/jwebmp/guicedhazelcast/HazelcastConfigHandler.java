@@ -1,7 +1,9 @@
 package com.jwebmp.guicedhazelcast;
 
 import com.jwebmp.guicedinjection.interfaces.IFileContentsScanner;
-import io.github.lukehutch.fastclasspathscanner.matchprocessor.FileMatchContentsProcessorWithContext;
+import io.github.classgraph.Resource;
+import io.github.classgraph.ResourceList;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 import javax.validation.constraints.NotNull;
@@ -49,30 +51,25 @@ public class HazelcastConfigHandler
 
 	@SuppressWarnings("ResultOfMethodCallIgnored")
 	@Override
-	public Map<String, FileMatchContentsProcessorWithContext> onMatch()
+	public Map<String, ResourceList.ByteArrayConsumer> onMatch()
 	{
 
-		Map<String, FileMatchContentsProcessorWithContext> map = new HashMap<>();
-		FileMatchContentsProcessorWithContext processor = (classpathElt, relativePath, fileContents) ->
+		Map<String,ResourceList.ByteArrayConsumer> map = new HashMap<>();
+		ResourceList.ByteArrayConsumer processor = (Resource resource, byte[] bytearray) ->
 		{
-			log.log(Level.FINE, "Hazelcast client found in class path - " + classpathElt.getCanonicalPath() + ". Sending to temp directory [" + getTempDir() + "]");
-			hazelcastConfig = fileContents;
+			log.log(Level.FINE, "Hazelcast client found in class path - " + resource.getPathRelativeToClasspathElement() + ". Sending to temp directory [" + getTempDir() + "]");
+			hazelcastConfig = bytearray;
 			File hazelTempFile = new File(getTempDir() + hazelcastConfigFileName);
-			if (hazelTempFile.exists())
+			try
 			{
-				hazelTempFile.delete();
-			}
-			hazelTempFile.createNewFile();
-			try (FileOutputStream fw = new FileOutputStream(hazelTempFile))
-			{
-				IOUtils.write(hazelcastConfig, fw);
+				FileUtils.writeByteArrayToFile(hazelTempFile,hazelcastConfig,false);
+				log.config("Setting Hazelcast Client Config filename to [" + hazelTempFile.getCanonicalPath() + "]");
+				System.setProperty("hazelcast.client.config", getTempDir() + hazelcastConfigFileName);
 			}
 			catch (Exception e)
 			{
-				log.log(Level.SEVERE, "Unable to write down hazelcast to temp directory [" + getTempDir() + hazelcastConfigFileName + "]", e);
+				log.log(Level.SEVERE, "Unable to create Hazelcast Temporary File",e);
 			}
-			log.config("Setting Hazelcast Client Config filename to [" + getTempDir() + hazelcastConfigFileName + "]");
-			System.setProperty("hazelcast.client.config", getTempDir() + hazelcastConfigFileName);
 		};
 
 		map.put(hazelcastConfigFileName, processor);
@@ -82,17 +79,9 @@ public class HazelcastConfigHandler
 
 	@SuppressWarnings("WeakerAccess")
 	@NotNull
-	public static String getTempDir() throws IOException
+	public static String getTempDir()
 	{
-		if (tempDir == null)
-		{
-			tempDir = File.createTempFile("jwebmp", "sfx")
-			              .getPath();
-			int lastIndex = tempDir.lastIndexOf("/") == -1 ? tempDir.lastIndexOf("\\") : tempDir.lastIndexOf("/");
-			tempDir = tempDir.substring(0, lastIndex);
-			tempDir += "/";
-		}
-		return tempDir;
+		return System.getProperty("java.io.tmpdir");
 	}
 
 	public static void setTempDir(String tempDir)

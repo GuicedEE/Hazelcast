@@ -11,12 +11,12 @@ module com.jwebmp.guicedhazelcast {
 	requires com.jwebmp.logmaster;
 	requires java.logging;
 	requires cache.annotations.ri.guice;
-	requires io.github.lukehutch.fastclasspathscanner;
 	requires java.validation;
 	requires commons.io;
 	requires com.jwebmp.guicedpersistence;
 	requires org.hibernate.orm.jcache;
 	requires cache.api;
+	requires io.github.classgraph;
 
 	provides com.jwebmp.guicedpersistence.db.PropertiesEntityManagerReader with HazelcastEntityManagerProperties;
 
