@@ -45,7 +45,7 @@
 
         <dependency>
             <groupId>com.jwebmp</groupId>
-            <artifactId>guiced-persistence-jpa</artifactId>
+            <artifactId>guiced-persistence-btm</artifactId>
             <version>${project.version}</version>
             <classifier>${jwebmp.runtime.classifier}</classifier>
             <scope>test</scope>
@@ -73,6 +73,11 @@
         </dependency>
 
         <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-jcache</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>javax.cache</groupId>
             <artifactId>cache-api</artifactId>
         </dependency>
@@ -97,11 +102,6 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
             <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-jcache</artifactId>
         </dependency>
 
         <dependency>
