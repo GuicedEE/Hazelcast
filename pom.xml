@@ -51,6 +51,7 @@
             <artifactId>guiced-persistence-btm</artifactId>
             <version>${project.version}</version>
             <classifier>${jwebmp.runtime.classifier}</classifier>
+            <optional>true</optional>
             <scope>test</scope>
             <type>jar</type>
         </dependency>
