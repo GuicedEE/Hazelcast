@@ -12,7 +12,7 @@ module com.jwebmp.guicedhazelcast {
 	requires java.logging;
 	requires cache.annotations.ri.guice;
 	requires java.validation;
-	requires commons.io;
+
 	requires com.jwebmp.guicedpersistence;
 	requires org.hibernate.orm.jcache;
 	requires cache.api;
