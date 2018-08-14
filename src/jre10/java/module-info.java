@@ -17,6 +17,7 @@ module com.jwebmp.guicedhazelcast {
 	requires org.hibernate.orm.jcache;
 	requires cache.api;
 	requires io.github.classgraph;
+	requires org.apache.commons.io;
 
 	provides com.jwebmp.guicedpersistence.db.PropertiesEntityManagerReader with HazelcastEntityManagerProperties;
 
