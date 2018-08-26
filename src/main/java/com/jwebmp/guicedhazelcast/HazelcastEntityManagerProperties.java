@@ -1,6 +1,6 @@
 package com.jwebmp.guicedhazelcast;
 
-import com.jwebmp.guicedpersistence.db.PropertiesEntityManagerReader;
+import com.jwebmp.guicedpersistence.services.PropertiesEntityManagerReader;
 import com.oracle.jaxb21.PersistenceUnit;
 
 import java.util.HashMap;
@@ -19,48 +19,6 @@ public class HazelcastEntityManagerProperties
 	private static String groupPass;
 	private static String instanceName;
 
-	@Override
-	public Map<String, String> processProperties(PersistenceUnit persistenceUnit, Properties incomingProperties)
-	{
-		Map<String, String> props = new HashMap<>();
-
-		props.put("hibernate.cache.region.factory_class", "org.hibernate.cache.jcache.internal.JCacheRegionFactory");
-		props.put("hibernate.javax.cache.provider", "com.hazelcast.client.cache.impl.HazelcastClientCachingProvider");
-
-		props.put("hibernate.cache.use_second_level_cache", "true");
-		props.put("hibernate.cache.use_query_cache", "true");
-		props.put("hibernate.cache.use_minimal_puts", "true");
-
-		if (address != null)
-		{
-			props.put("hibernate.cache.hazelcast.use_native_client", "true");
-			props.put("hibernate.cache.hazelcast.native_client_hosts", address);
-			props.put("hibernate.cache.hazelcast.native_client_address", address);
-		}
-		if (groupName != null)
-		{
-			props.put("hibernate.cache.hazelcast.use_native_client", "true");
-			props.put("hibernate.cache.hazelcast.native_client_group", groupName);
-		}
-		if (groupPass != null)
-		{
-			props.put("hibernate.cache.hazelcast.use_native_client", "true");
-			props.put("hibernate.cache.hazelcast.native_client_password", groupPass);
-		}
-		if (instanceName != null)
-		{
-			props.put("hibernate.cache.hazelcast.use_native_client", "true");
-			props.put("hibernate.cache.hazelcast.instance_name", instanceName);
-		}
-
-		if (regionName != null)
-		{
-			props.put("hibernate.cache.region_prefix", regionName);
-		}
-
-		return props;
-	}
-
 	/**
 	 * Sets a region name if required
 	 *
@@ -68,7 +26,7 @@ public class HazelcastEntityManagerProperties
 	 */
 	public static String getRegionName()
 	{
-		return regionName;
+		return HazelcastEntityManagerProperties.regionName;
 	}
 
 	/**
@@ -84,7 +42,7 @@ public class HazelcastEntityManagerProperties
 
 	public static boolean isUseLocalRegionFactory()
 	{
-		return useLocalRegionFactory;
+		return HazelcastEntityManagerProperties.useLocalRegionFactory;
 	}
 
 	public static void setUseLocalRegionFactory(boolean useLocalRegionFactory)
@@ -94,7 +52,7 @@ public class HazelcastEntityManagerProperties
 
 	public static String getAddress()
 	{
-		return address;
+		return HazelcastEntityManagerProperties.address;
 	}
 
 	public static void setAddress(String address)
@@ -104,7 +62,7 @@ public class HazelcastEntityManagerProperties
 
 	public static String getGroupName()
 	{
-		return groupName;
+		return HazelcastEntityManagerProperties.groupName;
 	}
 
 	public static void setGroupName(String groupName)
@@ -114,7 +72,7 @@ public class HazelcastEntityManagerProperties
 
 	public static String getGroupPass()
 	{
-		return groupPass;
+		return HazelcastEntityManagerProperties.groupPass;
 	}
 
 	public static void setGroupPass(String groupPass)
@@ -124,11 +82,53 @@ public class HazelcastEntityManagerProperties
 
 	public static String getInstanceName()
 	{
-		return instanceName;
+		return HazelcastEntityManagerProperties.instanceName;
 	}
 
 	public static void setInstanceName(String instanceName)
 	{
 		HazelcastEntityManagerProperties.instanceName = instanceName;
+	}
+
+	@Override
+	public Map<String, String> processProperties(PersistenceUnit persistenceUnit, Properties incomingProperties)
+	{
+		Map<String, String> props = new HashMap<>();
+
+		props.put("hibernate.cache.region.factory_class", "org.hibernate.cache.jcache.internal.JCacheRegionFactory");
+		props.put("hibernate.javax.cache.provider", "com.hazelcast.client.cache.impl.HazelcastClientCachingProvider");
+
+		props.put("hibernate.cache.use_second_level_cache", "true");
+		props.put("hibernate.cache.use_query_cache", "true");
+		props.put("hibernate.cache.use_minimal_puts", "true");
+
+		if (HazelcastEntityManagerProperties.address != null)
+		{
+			props.put("hibernate.cache.hazelcast.use_native_client", "true");
+			props.put("hibernate.cache.hazelcast.native_client_hosts", HazelcastEntityManagerProperties.address);
+			props.put("hibernate.cache.hazelcast.native_client_address", HazelcastEntityManagerProperties.address);
+		}
+		if (HazelcastEntityManagerProperties.groupName != null)
+		{
+			props.put("hibernate.cache.hazelcast.use_native_client", "true");
+			props.put("hibernate.cache.hazelcast.native_client_group", HazelcastEntityManagerProperties.groupName);
+		}
+		if (HazelcastEntityManagerProperties.groupPass != null)
+		{
+			props.put("hibernate.cache.hazelcast.use_native_client", "true");
+			props.put("hibernate.cache.hazelcast.native_client_password", HazelcastEntityManagerProperties.groupPass);
+		}
+		if (HazelcastEntityManagerProperties.instanceName != null)
+		{
+			props.put("hibernate.cache.hazelcast.use_native_client", "true");
+			props.put("hibernate.cache.hazelcast.instance_name", HazelcastEntityManagerProperties.instanceName);
+		}
+
+		if (HazelcastEntityManagerProperties.regionName != null)
+		{
+			props.put("hibernate.cache.region_prefix", HazelcastEntityManagerProperties.regionName);
+		}
+
+		return props;
 	}
 }

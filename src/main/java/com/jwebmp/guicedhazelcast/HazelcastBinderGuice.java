@@ -12,7 +12,7 @@ import java.util.logging.Logger;
  */
 @SuppressWarnings("unused")
 public class HazelcastBinderGuice
-		implements IGuiceDefaultBinder<GuiceInjectorModule>
+		implements IGuiceDefaultBinder<HazelcastBinderGuice, GuiceInjectorModule>
 {
 	private static final Logger log = LogFactory.getLog("HazelcastBinderGuice");
 

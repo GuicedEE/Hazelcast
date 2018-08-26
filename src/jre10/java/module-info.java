@@ -19,7 +19,7 @@ module com.jwebmp.guicedhazelcast {
 	requires io.github.classgraph;
 	requires org.apache.commons.io;
 
-	provides com.jwebmp.guicedpersistence.db.PropertiesEntityManagerReader with HazelcastEntityManagerProperties;
+	provides com.jwebmp.guicedpersistence.services.PropertiesEntityManagerReader with HazelcastEntityManagerProperties;
 
 	provides IFileContentsScanner with HazelcastConfigHandler;
 	provides IGuiceDefaultBinder with HazelcastBinderGuice;
