@@ -10,7 +10,7 @@ import javax.cache.annotation.CacheKey;
 import javax.cache.annotation.CacheResult;
 import java.util.logging.Level;
 
-class HazelcastBinderTest
+public class HazelcastBinderTest
 {
 
 	private static HazelcastBinderTest test;
