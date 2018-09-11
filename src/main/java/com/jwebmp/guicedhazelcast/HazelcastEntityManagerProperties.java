@@ -11,6 +11,7 @@ import java.util.Properties;
 public class HazelcastEntityManagerProperties
 		implements PropertiesEntityManagerReader
 {
+
 	private static String regionName = null;
 	private static boolean useLocalRegionFactory = false;
 
