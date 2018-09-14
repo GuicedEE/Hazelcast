@@ -1,11 +1,16 @@
 import com.jwebmp.guicedhazelcast.HazelcastBinderGuice;
 import com.jwebmp.guicedhazelcast.HazelcastConfigHandler;
 import com.jwebmp.guicedhazelcast.HazelcastEntityManagerProperties;
+import com.jwebmp.guicedhazelcast.HazelcastInitializer;
 import com.jwebmp.guicedinjection.interfaces.IFileContentsScanner;
 import com.jwebmp.guicedinjection.interfaces.IGuiceDefaultBinder;
+import com.jwebmp.guicedinjection.interfaces.IGuicePostStartup;
 
 module com.jwebmp.guicedhazelcast {
 	exports com.jwebmp.guicedhazelcast;
+
+	requires com.google.guice;
+	requires hazelcast.all;
 
 	requires com.jwebmp.guicedinjection;
 	requires com.jwebmp.logmaster;
@@ -19,9 +24,12 @@ module com.jwebmp.guicedhazelcast {
 	requires io.github.classgraph;
 	requires org.apache.commons.io;
 
+	requires com.google.common;
+
 	requires com.jwebmp.guicedpersistence.readers.hibernateproperties;
 
 	provides com.jwebmp.guicedpersistence.services.PropertiesEntityManagerReader with HazelcastEntityManagerProperties;
+	provides IGuicePostStartup with HazelcastInitializer;
 
 	provides IFileContentsScanner with HazelcastConfigHandler;
 	provides IGuiceDefaultBinder with HazelcastBinderGuice;

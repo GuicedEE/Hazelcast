@@ -10,10 +10,12 @@ import javax.cache.annotation.CacheKey;
 import javax.cache.annotation.CacheResult;
 import java.util.logging.Level;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 public class HazelcastBinderTest
 {
 
-	private static HazelcastBinderTest test;
+	private HazelcastBinderTest test;
 
 	private String returnTest = "Not this one";
 
@@ -28,9 +30,14 @@ public class HazelcastBinderTest
 		System.out.println(test.test("1"));
 		System.out.println(test.test("2"));
 		System.out.println(test.test("Cache Test"));
+
 		test.returnTest = "Test the Cache Pull";
+
 		String result = test.test("Cache Test");
-		System.out.println(test.test("Cache Test"));
+		System.out.println("Output from cache : " + test.test("Cache Test"));
+		System.out.println("Output from result : " + test.test("Cache Test"));
+
+		assertEquals("Not this one", test.test("Cache Test"));
 
 		if (test.test("Cache Test")
 		        .equals(test.returnTest))
