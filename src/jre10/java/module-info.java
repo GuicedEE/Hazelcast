@@ -27,6 +27,7 @@ module com.jwebmp.guicedhazelcast {
 	requires com.google.common;
 
 	requires com.jwebmp.guicedpersistence.readers.hibernateproperties;
+	requires javax.inject;
 
 	provides com.jwebmp.guicedpersistence.services.PropertiesEntityManagerReader with HazelcastEntityManagerProperties;
 	provides IGuicePostStartup with HazelcastInitializer;
