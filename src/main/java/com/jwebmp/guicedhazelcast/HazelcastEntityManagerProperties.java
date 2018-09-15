@@ -11,6 +11,10 @@ import java.util.Properties;
 public class HazelcastEntityManagerProperties
 		implements PropertiesEntityManagerReader
 {
+	/**
+	 * The property to enable native client mode (this client mode)
+	 */
+	private static final String HazelcastNativeClientProperty = "hibernate.cache.hazelcast.use_native_client";
 
 	private static String regionName = null;
 	private static boolean useLocalRegionFactory = false;
@@ -105,23 +109,23 @@ public class HazelcastEntityManagerProperties
 
 		if (HazelcastEntityManagerProperties.address != null)
 		{
-			props.put("hibernate.cache.hazelcast.use_native_client", "true");
+			props.put(HazelcastNativeClientProperty, "true");
 			props.put("hibernate.cache.hazelcast.native_client_hosts", HazelcastEntityManagerProperties.address);
 			props.put("hibernate.cache.hazelcast.native_client_address", HazelcastEntityManagerProperties.address);
 		}
 		if (HazelcastEntityManagerProperties.groupName != null)
 		{
-			props.put("hibernate.cache.hazelcast.use_native_client", "true");
+			props.put(HazelcastNativeClientProperty, "true");
 			props.put("hibernate.cache.hazelcast.native_client_group", HazelcastEntityManagerProperties.groupName);
 		}
 		if (HazelcastEntityManagerProperties.groupPass != null)
 		{
-			props.put("hibernate.cache.hazelcast.use_native_client", "true");
+			props.put(HazelcastNativeClientProperty, "true");
 			props.put("hibernate.cache.hazelcast.native_client_password", HazelcastEntityManagerProperties.groupPass);
 		}
 		if (HazelcastEntityManagerProperties.instanceName != null)
 		{
-			props.put("hibernate.cache.hazelcast.use_native_client", "true");
+			props.put(HazelcastNativeClientProperty, "true");
 			props.put("hibernate.cache.hazelcast.instance_name", HazelcastEntityManagerProperties.instanceName);
 		}
 

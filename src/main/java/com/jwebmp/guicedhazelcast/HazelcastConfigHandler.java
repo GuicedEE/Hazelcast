@@ -4,12 +4,9 @@ import com.jwebmp.guicedinjection.interfaces.IFileContentsScanner;
 import io.github.classgraph.Resource;
 import io.github.classgraph.ResourceList;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 
 import javax.validation.constraints.NotNull;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -24,7 +21,6 @@ public class HazelcastConfigHandler
 {
 	private static final Logger log = Logger.getLogger("HazelcastConfigHandler");
 
-	private static String tempDir;
 	private static String hazelcastConfigFileName = "hazelcast-client.xml";
 	private static byte[] hazelcastConfig = null;
 
@@ -58,7 +54,7 @@ public class HazelcastConfigHandler
 		ResourceList.ByteArrayConsumer processor = (Resource resource, byte[] bytearray) ->
 		{
 			log.log(Level.FINE, "Hazelcast client found in class path - " + resource.getPathRelativeToClasspathElement() + ". Sending to temp directory [" + getTempDir() + "]");
-			hazelcastConfig = bytearray;
+			setHazelcastConfig(bytearray);
 			File hazelTempFile = new File(getTempDir() + hazelcastConfigFileName);
 			try
 			{
@@ -84,8 +80,14 @@ public class HazelcastConfigHandler
 		return System.getProperty("java.io.tmpdir");
 	}
 
-	public static void setTempDir(String tempDir)
+	/**
+	 * Sets the given hazelcast configuration byte []
+	 *
+	 * @param hazelcastConfig
+	 * 		The configuration byte []
+	 */
+	static void setHazelcastConfig(byte[] hazelcastConfig)
 	{
-		HazelcastConfigHandler.tempDir = tempDir;
+		HazelcastConfigHandler.hazelcastConfig = hazelcastConfig;
 	}
 }
