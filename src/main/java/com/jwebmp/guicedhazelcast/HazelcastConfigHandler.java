@@ -66,6 +66,7 @@ public class HazelcastConfigHandler
 			{
 				log.log(Level.SEVERE, "Unable to create Hazelcast Temporary File",e);
 			}
+			resource.close();
 		};
 
 		map.put(hazelcastConfigFileName, processor);
