@@ -22,7 +22,9 @@ public class HazelcastConfigHandler
 	private static final Logger log = Logger.getLogger("HazelcastConfigHandler");
 
 	private static String hazelcastConfigFileName = "hazelcast-client.xml";
+
 	private static byte[] hazelcastConfig = null;
+
 
 	/**
 	 * Returns any found hazel cast config file
@@ -32,6 +34,17 @@ public class HazelcastConfigHandler
 	public static byte[] getHazelcastConfig()
 	{
 		return hazelcastConfig;
+	}
+
+	/**
+	 * Sets the given hazelcast configuration byte []
+	 *
+	 * @param hazelcastConfig
+	 * 		The configuration byte []
+	 */
+	static void setHazelcastConfig(byte[] hazelcastConfig)
+	{
+		HazelcastConfigHandler.hazelcastConfig = hazelcastConfig;
 	}
 
 	@NotNull
@@ -50,7 +63,7 @@ public class HazelcastConfigHandler
 	public Map<String, ResourceList.ByteArrayConsumer> onMatch()
 	{
 
-		Map<String,ResourceList.ByteArrayConsumer> map = new HashMap<>();
+		Map<String, ResourceList.ByteArrayConsumer> map = new HashMap<>();
 		ResourceList.ByteArrayConsumer processor = (Resource resource, byte[] bytearray) ->
 		{
 			log.log(Level.FINE, "Hazelcast client found in class path - " + resource.getPathRelativeToClasspathElement() + ". Sending to temp directory [" + getTempDir() + "]");
@@ -58,13 +71,13 @@ public class HazelcastConfigHandler
 			File hazelTempFile = new File(getTempDir() + hazelcastConfigFileName);
 			try
 			{
-				FileUtils.writeByteArrayToFile(hazelTempFile,hazelcastConfig,false);
+				FileUtils.writeByteArrayToFile(hazelTempFile, hazelcastConfig, false);
 				log.config("Setting Hazelcast Client Config filename to [" + hazelTempFile.getCanonicalPath() + "]");
 				System.setProperty("hazelcast.client.config", getTempDir() + hazelcastConfigFileName);
 			}
 			catch (Exception e)
 			{
-				log.log(Level.SEVERE, "Unable to create Hazelcast Temporary File",e);
+				log.log(Level.SEVERE, "Unable to create Hazelcast Temporary File", e);
 			}
 			resource.close();
 		};
@@ -79,16 +92,5 @@ public class HazelcastConfigHandler
 	public static String getTempDir()
 	{
 		return System.getProperty("java.io.tmpdir");
-	}
-
-	/**
-	 * Sets the given hazelcast configuration byte []
-	 *
-	 * @param hazelcastConfig
-	 * 		The configuration byte []
-	 */
-	static void setHazelcastConfig(byte[] hazelcastConfig)
-	{
-		HazelcastConfigHandler.hazelcastConfig = hazelcastConfig;
 	}
 }

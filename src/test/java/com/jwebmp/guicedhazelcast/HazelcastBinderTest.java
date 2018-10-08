@@ -39,8 +39,10 @@ public class HazelcastBinderTest
 
 		assertEquals("Not this one", test.test("Cache Test"));
 
-		if (test.test("Cache Test")
-		        .equals(test.returnTest))
+		String shouldBeCached = test.test("Cache Test");
+
+		if (shouldBeCached
+				    .equals(test.returnTest))
 		{
 			Assertions.fail("Cache is not being hit");
 		}

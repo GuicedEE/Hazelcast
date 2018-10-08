@@ -145,4 +145,17 @@
         <system>TeamCity</system>
         <url>http://jwebmp.com/teamcity</url>
     </ciManagement>
+
+    <profiles>
+        <profile>
+            <id>jdk11</id>
+            <dependencies>
+                <dependency>
+                    <groupId>javax.activation</groupId>
+                    <artifactId>javax.activation-api</artifactId>
+                    <version>${javax.activation.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
 </project>

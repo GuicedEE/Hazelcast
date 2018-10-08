@@ -1,4 +1,4 @@
-package com.jwebmp.guicedhazelcast.services;
+package com.jwebmp.guicedhazelcast.implementations;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;

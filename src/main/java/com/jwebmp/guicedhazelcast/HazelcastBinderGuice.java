@@ -4,7 +4,10 @@ import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.config.GroupConfig;
 import com.hazelcast.core.HazelcastInstance;
+import com.jwebmp.guicedhazelcast.services.IGuicedHazelcastClientConfig;
+import com.jwebmp.guicedinjection.GuiceContext;
 import com.jwebmp.guicedinjection.abstractions.GuiceInjectorModule;
+import com.jwebmp.guicedinjection.interfaces.IDefaultService;
 import com.jwebmp.guicedinjection.interfaces.IGuiceDefaultBinder;
 import com.jwebmp.logger.LogFactory;
 import org.jsr107.ri.annotations.guice.module.CacheAnnotationsModule;
@@ -12,10 +15,7 @@ import org.jsr107.ri.annotations.guice.module.CacheAnnotationsModule;
 import javax.cache.Caching;
 import javax.cache.spi.CachingProvider;
 import javax.inject.Provider;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
@@ -25,11 +25,25 @@ import java.util.logging.Logger;
 public class HazelcastBinderGuice
 		implements IGuiceDefaultBinder<HazelcastBinderGuice, GuiceInjectorModule>
 {
+
 	private static final Logger log = LogFactory.getLog("HazelcastBinderGuice");
 	/**
 	 * The connected hazelcast client for JCache
 	 */
 	private static HazelcastInstance hzClient;
+
+	/**
+	 * Returns and/or creates the generated hazelcast instance
+	 *
+	 * @param hzClient
+	 * 		The client
+	 *
+	 * @return
+	 */
+	static HazelcastInstance getHzClient(HazelcastInstance hzClient)
+	{
+		return GuiceContext.get(HazelcastInstance.class);
+	}
 
 	@Override
 	public void onBind(GuiceInjectorModule module)
@@ -67,14 +81,23 @@ public class HazelcastBinderGuice
 			      if (hzClient == null)
 			      {
 				      ClientConfig config = new ClientConfig();
-				      GroupConfig groupConfig = config.getGroupConfig();
-				      if (HazelcastEntityManagerProperties.getGroupName() != null)
+				      Set<IGuicedHazelcastClientConfig> configSet = IDefaultService.loaderToSet(ServiceLoader.load(IGuicedHazelcastClientConfig.class));
+				      for (IGuicedHazelcastClientConfig iGuicedHazelcastClientConfig : configSet)
 				      {
-					      groupConfig.setName(HazelcastEntityManagerProperties.getGroupName());
+					      config = iGuicedHazelcastClientConfig.buildConfig(config);
 				      }
-				      if (HazelcastEntityManagerProperties.getGroupPass() != null)
+
+				      if (config.getGroupConfig() == null)
 				      {
-					      groupConfig.setPassword(HazelcastEntityManagerProperties.getGroupPass());
+					      GroupConfig groupConfig = config.getGroupConfig();
+					      if (HazelcastEntityManagerProperties.getGroupName() != null)
+					      {
+						      groupConfig.setName(HazelcastEntityManagerProperties.getGroupName());
+					      }
+					      if (HazelcastEntityManagerProperties.getGroupPass() != null)
+					      {
+						      groupConfig.setPassword(HazelcastEntityManagerProperties.getGroupPass());
+					      }
 				      }
 				      setHzClient(HazelcastClient.newHazelcastClient(config));
 			      }
