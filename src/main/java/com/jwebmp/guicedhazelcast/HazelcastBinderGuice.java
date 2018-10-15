@@ -7,7 +7,6 @@ import com.hazelcast.core.HazelcastInstance;
 import com.jwebmp.guicedhazelcast.services.IGuicedHazelcastClientConfig;
 import com.jwebmp.guicedinjection.GuiceContext;
 import com.jwebmp.guicedinjection.abstractions.GuiceInjectorModule;
-import com.jwebmp.guicedinjection.interfaces.IDefaultService;
 import com.jwebmp.guicedinjection.interfaces.IGuiceDefaultBinder;
 import com.jwebmp.logger.LogFactory;
 import org.jsr107.ri.annotations.guice.module.CacheAnnotationsModule;
@@ -81,7 +80,9 @@ public class HazelcastBinderGuice
 			      if (hzClient == null)
 			      {
 				      ClientConfig config = new ClientConfig();
-				      Set<IGuicedHazelcastClientConfig> configSet = IDefaultService.loaderToSet(ServiceLoader.load(IGuicedHazelcastClientConfig.class));
+				      Set<IGuicedHazelcastClientConfig> configSet = GuiceContext.instance()
+				                                                                .getLoader(IGuicedHazelcastClientConfig.class, true, ServiceLoader.load(
+						                                                                IGuicedHazelcastClientConfig.class));
 				      for (IGuicedHazelcastClientConfig iGuicedHazelcastClientConfig : configSet)
 				      {
 					      config = iGuicedHazelcastClientConfig.buildConfig(config);
@@ -99,6 +100,8 @@ public class HazelcastBinderGuice
 						      groupConfig.setPassword(HazelcastEntityManagerProperties.getGroupPass());
 					      }
 				      }
+				      GuiceContext.getAllLoadedServices()
+				                  .put(IGuicedHazelcastClientConfig.class, configSet);
 				      setHzClient(HazelcastClient.newHazelcastClient(config));
 			      }
 			      return hzClient;

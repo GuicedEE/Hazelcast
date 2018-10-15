@@ -8,7 +8,7 @@ import com.jwebmp.logger.LogFactory;
 import java.util.logging.Logger;
 
 public class HazelcastPostStartup
-		implements IGuicePostStartup
+		implements IGuicePostStartup<HazelcastPostStartup>
 {
 	private static final Logger log = LogFactory.getLog("HazelcastPostStartup");
 
