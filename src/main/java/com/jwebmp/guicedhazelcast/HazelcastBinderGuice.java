@@ -100,8 +100,6 @@ public class HazelcastBinderGuice
 						      groupConfig.setPassword(HazelcastEntityManagerProperties.getGroupPass());
 					      }
 				      }
-				      GuiceContext.getAllLoadedServices()
-				                  .put(IGuicedHazelcastClientConfig.class, configSet);
 				      setHzClient(HazelcastClient.newHazelcastClient(config));
 			      }
 			      return hzClient;
