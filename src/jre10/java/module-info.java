@@ -10,25 +10,19 @@ import com.jwebmp.guicedinjection.interfaces.IGuicePostStartup;
 module com.jwebmp.guicedhazelcast {
 	exports com.jwebmp.guicedhazelcast;
 
-	requires com.google.guice;
-	requires hazelcast.all;
+	requires transitive hazelcast.all;
 
-	requires com.jwebmp.guicedinjection;
-	requires com.jwebmp.logmaster;
-	requires java.logging;
-	requires cache.annotations.ri.guice;
-	requires java.validation;
+	requires transitive cache.annotations.ri.guice;
 
-	requires com.jwebmp.guicedpersistence;
-	requires org.hibernate.orm.jcache;
-	requires cache.api;
-	requires io.github.classgraph;
-	requires org.apache.commons.io;
+	requires transitive com.jwebmp.guicedpersistence;
+	requires transitive org.hibernate.orm.jcache;
+	requires transitive cache.api;
 
-	requires com.google.common;
+	requires transitive org.apache.commons.io;
 
-	requires com.jwebmp.guicedpersistence.readers.hibernateproperties;
-	requires javax.inject;
+	requires transitive com.jwebmp.guicedpersistence.readers.hibernateproperties;
+
+	requires jdk.unsupported;
 
 	uses IGuicedHazelcastClientConfig;
 
