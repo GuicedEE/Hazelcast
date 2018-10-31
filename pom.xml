@@ -21,30 +21,13 @@
     <dependencies>
         <dependency>
             <groupId>com.jwebmp</groupId>
-            <artifactId>guiced-injection</artifactId>
+            <artifactId>guiced-persistence-hibernateproperties-reader</artifactId>
             <version>${project.version}</version>
             <classifier>${jwebmp.runtime.classifier}</classifier>
             <!--<optional>true</optional>-->
             <type>jar</type>
         </dependency>
 
-        <dependency>
-            <groupId>com.jwebmp</groupId>
-            <artifactId>jwebmp-log-master</artifactId>
-            <version>${project.version}</version>
-            <classifier>${jwebmp.runtime.classifier}</classifier>
-            <!--<optional>true</optional>-->
-            <type>jar</type>
-        </dependency>
-
-        <dependency>
-            <groupId>com.jwebmp</groupId>
-            <artifactId>guiced-persistence</artifactId>
-            <version>${project.version}</version>
-            <classifier>${jwebmp.runtime.classifier}</classifier>
-            <!--<optional>true</optional>-->
-            <type>jar</type>
-        </dependency>
 
         <dependency>
             <groupId>com.jwebmp</groupId>
@@ -55,23 +38,6 @@
             <scope>test</scope>
             <type>jar</type>
         </dependency>
-
-        <dependency>
-            <groupId>com.jwebmp</groupId>
-            <artifactId>guiced-persistence-hibernateproperties-reader</artifactId>
-            <version>${project.version}</version>
-            <classifier>${jwebmp.runtime.classifier}</classifier>
-            <!--<optional>true</optional>-->
-            <type>jar</type>
-        </dependency>
-
-
-        <dependency>
-            <groupId>com.google.inject</groupId>
-            <artifactId>guice</artifactId>
-            <type>jar</type>
-        </dependency>
-
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>
