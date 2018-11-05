@@ -2,10 +2,9 @@ import com.jwebmp.guicedhazelcast.HazelcastBinderGuice;
 import com.jwebmp.guicedhazelcast.HazelcastConfigHandler;
 import com.jwebmp.guicedhazelcast.HazelcastEntityManagerProperties;
 import com.jwebmp.guicedhazelcast.HazelcastPostStartup;
+import com.jwebmp.guicedhazelcast.implementations.HazelcastGuiceScanExclusions;
 import com.jwebmp.guicedhazelcast.services.IGuicedHazelcastClientConfig;
-import com.jwebmp.guicedinjection.interfaces.IFileContentsScanner;
-import com.jwebmp.guicedinjection.interfaces.IGuiceDefaultBinder;
-import com.jwebmp.guicedinjection.interfaces.IGuicePostStartup;
+import com.jwebmp.guicedinjection.interfaces.*;
 
 module com.jwebmp.guicedhazelcast {
 	exports com.jwebmp.guicedhazelcast;
@@ -33,6 +32,9 @@ module com.jwebmp.guicedhazelcast {
 	uses IGuicedHazelcastClientConfig;
 
 	provides com.jwebmp.guicedpersistence.services.PropertiesEntityManagerReader with HazelcastEntityManagerProperties;
+
+	provides IGuiceScanModuleExclusions with HazelcastGuiceScanExclusions;
+	provides IGuiceScanJarExclusions with HazelcastGuiceScanExclusions;
 
 	provides IFileContentsScanner with HazelcastConfigHandler;
 	provides IGuiceDefaultBinder with HazelcastBinderGuice;
