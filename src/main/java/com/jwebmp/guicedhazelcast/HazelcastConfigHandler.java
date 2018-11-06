@@ -81,9 +81,7 @@ public class HazelcastConfigHandler
 			}
 			resource.close();
 		};
-
 		map.put(hazelcastConfigFileName, processor);
-
 		return map;
 	}
 
