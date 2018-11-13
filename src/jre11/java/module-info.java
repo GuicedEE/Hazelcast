@@ -26,6 +26,8 @@ module com.jwebmp.guicedhazelcast {
 
 	requires com.google.common;
 
+	requires transitive jdk.unsupported;
+
 	requires com.jwebmp.guicedpersistence.readers.hibernateproperties;
 	requires javax.inject;
 
