@@ -1,1 +1,1 @@
-com.jwebmp.guicedhazelcast.HazelcastBinderGuice
+com.jwebmp.guicedhazelcast.implementations.HazelcastBinderGuice
