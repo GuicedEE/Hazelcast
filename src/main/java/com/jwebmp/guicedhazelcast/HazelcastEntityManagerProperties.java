@@ -1,6 +1,6 @@
 package com.jwebmp.guicedhazelcast;
 
-import com.jwebmp.guicedpersistence.services.PropertiesEntityManagerReader;
+import com.jwebmp.guicedpersistence.services.IPropertiesEntityManagerReader;
 import com.oracle.jaxb21.PersistenceUnit;
 
 import java.util.HashMap;
@@ -9,7 +9,7 @@ import java.util.Properties;
 
 @SuppressWarnings("unused")
 public class HazelcastEntityManagerProperties
-		implements PropertiesEntityManagerReader
+		implements IPropertiesEntityManagerReader
 {
 	/**
 	 * The property to enable native client mode (this client mode)
