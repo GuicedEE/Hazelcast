@@ -1,25 +1,22 @@
 package com.jwebmp.guicedhazelcast.implementations;
 
-import com.google.inject.Inject;
-import com.google.inject.Injector;
 import com.hazelcast.core.ManagedContext;
+import com.jwebmp.guicedinjection.GuiceContext;
 
 public class HazelcastGuiceManagedContext
 		implements ManagedContext
 {
 
-	private final Injector injector;
-
-	@Inject
-	public HazelcastGuiceManagedContext(Injector injector)
+	public HazelcastGuiceManagedContext()
 	{
-		this.injector = injector;
+		//No config required
 	}
 
 	@Override
 	public Object initialize(Object instance)
 	{
-		injector.injectMembers(instance);
+		GuiceContext.inject()
+		            .injectMembers(instance);
 		return instance;
 	}
 }

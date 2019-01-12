@@ -11,8 +11,9 @@ public interface IGuicedHazelcastClientConfig
 	 * Sets up the configuration suite
 	 *
 	 * @param clientConfig
+	 * 		The incoming and current configuration of the client ocnfiguration
 	 *
-	 * @return
+	 * @return Whatever config you want..
 	 */
 	ClientConfig buildConfig(ClientConfig clientConfig);
 }

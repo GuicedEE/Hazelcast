@@ -10,11 +10,11 @@ import org.jsr107.ri.annotations.guice.module.CacheAnnotationsModule;
 
 import javax.cache.Caching;
 import javax.cache.spi.CachingProvider;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Logger;
+
+import static com.jwebmp.guicedhazelcast.HazelcastConfigHandler.*;
 
 /**
  * Binds Caching Annotations to the Hazelcast Provider
@@ -43,17 +43,12 @@ public class HazelcastBinderGuice
 	@Override
 	public void onBind(GuiceInjectorModule module)
 	{
-		// Setup Hazelcast logging to JDK
+		log.config("Configuring Hazelcast");
+		// Setup Hazelcast logging to JDK with diagnostics
 		System.setProperty("hazelcast.logging.type", "jdk");
-		System.setProperty("hazelcast.diagnostics.enabled", "true");
+		System.setProperty("hazelcast.diagnostics.enabled", String.valueOf(diagnosticsEnabled));
 
-		// setup the known cache providers
-		Map<String, String> knownProviders = new HashMap<>();
-		knownProviders.put("org.infinispan.jcache.JCachingProvider", "infinispan");
-		knownProviders.put("org.ehcache.jcache.JCacheCachingProvider", "ehcache");
-		knownProviders.put("com.hazelcast.cache.HazelcastCachingProvider", "hazelcast");
-
-		List<CachingProvider> providers = new ArrayList<>();
+		Set<CachingProvider> providers = new HashSet<>();
 		for (CachingProvider provider : Caching.getCachingProviders())
 		{
 			providers.add(provider);
@@ -70,6 +65,7 @@ public class HazelcastBinderGuice
 			module.install(new CacheAnnotationsModule());
 		}
 
+		log.config("Bound HazelcastInstance.class");
 		module.bind(HazelcastInstance.class)
 		      .toProvider(new HazelcastClientProvider())
 		      .in(Singleton.class);

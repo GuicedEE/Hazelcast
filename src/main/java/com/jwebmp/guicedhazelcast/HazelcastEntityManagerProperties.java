@@ -16,18 +16,36 @@ public class HazelcastEntityManagerProperties
 	 */
 	private static final String HazelcastNativeClientProperty = "hibernate.cache.hazelcast.use_native_client";
 
-	private static String regionName = null;
-	private static boolean useLocalRegionFactory = false;
+	/**
+	 * The specific region name to apply the configuration to
+	 */
+	private static String regionName;
+	/**
+	 * If the local region factory must be used
+	 */
+	private static boolean useLocalRegionFactory;
 
+	/**
+	 * The given address to contact Hazelcast
+	 */
 	private static String address;
+	/**
+	 * The given group name to contact Hazelcast
+	 */
 	private static String groupName;
+	/**
+	 * The applied password for the Hazelcast instance
+	 */
 	private static String groupPass;
+	/**
+	 * The instance for hazelcast
+	 */
 	private static String instanceName;
 
 	/**
-	 * Sets a region name if required
+	 * The specific region name to apply the configuration to
 	 *
-	 * @return The applied region name or null
+	 * @return
 	 */
 	public static String getRegionName()
 	{
@@ -35,61 +53,110 @@ public class HazelcastEntityManagerProperties
 	}
 
 	/**
-	 * Sets the region name if required
+	 * The specific region name to apply the configuration to
 	 *
 	 * @param regionName
-	 * 		The region name to apply
 	 */
 	public static void setRegionName(String regionName)
 	{
 		HazelcastEntityManagerProperties.regionName = regionName;
 	}
 
+	/**
+	 * If the local region factory must be used
+	 *
+	 * @return
+	 */
 	public static boolean isUseLocalRegionFactory()
 	{
 		return HazelcastEntityManagerProperties.useLocalRegionFactory;
 	}
 
+	/**
+	 * If the local region factory must be used
+	 *
+	 * @param useLocalRegionFactory
+	 */
 	public static void setUseLocalRegionFactory(boolean useLocalRegionFactory)
 	{
 		HazelcastEntityManagerProperties.useLocalRegionFactory = useLocalRegionFactory;
 	}
 
+	/**
+	 * The given address to contact Hazelcast
+	 *
+	 * @return
+	 */
 	public static String getAddress()
 	{
 		return HazelcastEntityManagerProperties.address;
 	}
 
+	/**
+	 * The given address to contact Hazelcast
+	 *
+	 * @param address
+	 */
 	public static void setAddress(String address)
 	{
 		HazelcastEntityManagerProperties.address = address;
 	}
 
+	/**
+	 * The given group name to contact Hazelcast
+	 *
+	 * @return
+	 */
 	public static String getGroupName()
 	{
 		return HazelcastEntityManagerProperties.groupName;
 	}
 
+	/**
+	 * The given group name to contact Hazelcast
+	 *
+	 * @param groupName
+	 */
 	public static void setGroupName(String groupName)
 	{
 		HazelcastEntityManagerProperties.groupName = groupName;
 	}
 
+	/**
+	 * The applied password for the Hazelcast instance
+	 *
+	 * @return
+	 */
 	public static String getGroupPass()
 	{
 		return HazelcastEntityManagerProperties.groupPass;
 	}
 
+	/**
+	 * The applied password for the Hazelcast instance
+	 *
+	 * @param groupPass
+	 */
 	public static void setGroupPass(String groupPass)
 	{
 		HazelcastEntityManagerProperties.groupPass = groupPass;
 	}
 
+	/**
+	 * The instance for hazelcast
+	 *
+	 * @return
+	 */
 	public static String getInstanceName()
 	{
 		return HazelcastEntityManagerProperties.instanceName;
 	}
 
+	/**
+	 * The instance for hazelcast
+	 *
+	 * @param instanceName
+	 */
 	public static void setInstanceName(String instanceName)
 	{
 		HazelcastEntityManagerProperties.instanceName = instanceName;
@@ -103,9 +170,18 @@ public class HazelcastEntityManagerProperties
 		props.put("hibernate.cache.region.factory_class", "org.hibernate.cache.jcache.internal.JCacheRegionFactory");
 		props.put("hibernate.javax.cache.provider", "com.hazelcast.client.cache.impl.HazelcastClientCachingProvider");
 
-		props.put("hibernate.cache.use_second_level_cache", "true");
-		props.put("hibernate.cache.use_query_cache", "true");
-		props.put("hibernate.cache.use_minimal_puts", "true");
+		if (!incomingProperties.containsKey("hibernate.cache.use_second_level_cache"))
+		{
+			props.put("hibernate.cache.use_second_level_cache", "true");
+		}
+		if (!incomingProperties.containsKey("hibernate.cache.use_query_cache"))
+		{
+			props.put("hibernate.cache.use_query_cache", "true");
+		}
+		if (!incomingProperties.containsKey("hibernate.cache.use_minimal_puts"))
+		{
+			props.put("hibernate.cache.use_minimal_puts", "true");
+		}
 
 		if (HazelcastEntityManagerProperties.address != null)
 		{

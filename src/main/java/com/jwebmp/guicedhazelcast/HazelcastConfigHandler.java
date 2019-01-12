@@ -20,11 +20,9 @@ public class HazelcastConfigHandler
 		implements IFileContentsScanner
 {
 	private static final Logger log = Logger.getLogger("HazelcastConfigHandler");
-
+	public static boolean diagnosticsEnabled = true;
 	private static String hazelcastConfigFileName = "hazelcast-client.xml";
-
-	private static byte[] hazelcastConfig = null;
-
+	private static byte[] hazelcastConfig;
 
 	/**
 	 * Returns any found hazel cast config file
@@ -42,7 +40,8 @@ public class HazelcastConfigHandler
 	 * @param hazelcastConfig
 	 * 		The configuration byte []
 	 */
-	static void setHazelcastConfig(byte[] hazelcastConfig)
+	@SuppressWarnings("WeakerAccess")
+	public static void setHazelcastConfig(byte[] hazelcastConfig)
 	{
 		HazelcastConfigHandler.hazelcastConfig = hazelcastConfig;
 	}
@@ -62,7 +61,6 @@ public class HazelcastConfigHandler
 	@Override
 	public Map<String, ResourceList.ByteArrayConsumer> onMatch()
 	{
-
 		Map<String, ResourceList.ByteArrayConsumer> map = new HashMap<>();
 		ResourceList.ByteArrayConsumer processor = (Resource resource, byte[] bytearray) ->
 		{
