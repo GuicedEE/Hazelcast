@@ -1,15 +1,3 @@
-
-import com.jwebmp.guicedhazelcast.HazelcastConfigHandler;
-import com.jwebmp.guicedhazelcast.HazelcastEntityManagerProperties;
-import com.jwebmp.guicedhazelcast.implementations.HazelcastBinderGuice;
-import com.jwebmp.guicedhazelcast.implementations.HazelcastGuiceScanExclusions;
-import com.jwebmp.guicedhazelcast.services.IGuicedHazelcastClientConfig;
-import com.jwebmp.guicedinjection.interfaces.IFileContentsScanner;
-import com.jwebmp.guicedinjection.interfaces.IGuiceDefaultBinder;
-import com.jwebmp.guicedinjection.interfaces.IGuiceScanJarExclusions;
-import com.jwebmp.guicedinjection.interfaces.IGuiceScanModuleExclusions;
-import com.jwebmp.guicedpersistence.services.IPropertiesEntityManagerReader;
-
 module com.jwebmp.guicedhazelcast {
 	exports com.jwebmp.guicedhazelcast;
 
@@ -35,13 +23,13 @@ module com.jwebmp.guicedhazelcast {
 	requires com.jwebmp.guicedpersistence.readers.hibernateproperties;
 	requires javax.inject;
 
-	uses IGuicedHazelcastClientConfig;
+	uses com.jwebmp.guicedhazelcast.services.IGuicedHazelcastClientConfig;
 
-	provides IPropertiesEntityManagerReader with HazelcastEntityManagerProperties;
+	provides com.jwebmp.guicedpersistence.services.IPropertiesEntityManagerReader with com.jwebmp.guicedhazelcast.HazelcastEntityManagerProperties;
 
-	provides IGuiceScanModuleExclusions with HazelcastGuiceScanExclusions;
-	provides IGuiceScanJarExclusions with HazelcastGuiceScanExclusions;
+	provides com.jwebmp.guicedinjection.interfaces.IGuiceScanModuleExclusions with com.jwebmp.guicedhazelcast.implementations.HazelcastGuiceScanExclusions;
+	provides com.jwebmp.guicedinjection.interfaces.IGuiceScanJarExclusions with com.jwebmp.guicedhazelcast.implementations.HazelcastGuiceScanExclusions;
 
-	provides IFileContentsScanner with HazelcastConfigHandler;
-	provides IGuiceDefaultBinder with HazelcastBinderGuice;
+	provides com.jwebmp.guicedinjection.interfaces.IFileContentsScanner with com.jwebmp.guicedhazelcast.HazelcastConfigHandler;
+	provides com.jwebmp.guicedinjection.interfaces.IGuiceDefaultBinder with com.jwebmp.guicedhazelcast.implementations.HazelcastBinderGuice;
 }
