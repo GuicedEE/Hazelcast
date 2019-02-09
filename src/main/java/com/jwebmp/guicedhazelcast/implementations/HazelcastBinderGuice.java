@@ -8,6 +8,7 @@ import com.jwebmp.guicedinjection.interfaces.IGuiceDefaultBinder;
 import com.jwebmp.logger.LogFactory;
 import org.jsr107.ri.annotations.guice.module.CacheAnnotationsModule;
 
+import javax.cache.CacheManager;
 import javax.cache.Caching;
 import javax.cache.spi.CachingProvider;
 import java.util.HashSet;
@@ -62,6 +63,16 @@ public class HazelcastBinderGuice
 		}
 		else
 		{
+			module.bind(CachingProvider.class)
+			      .toProvider(() -> providers.iterator()
+			                                 .next())
+			      .in(Singleton.class);
+
+			module.bind(CacheManager.class)
+			      .toProvider(() -> providers.iterator()
+			                                 .next()
+			                                 .getCacheManager())
+			      .in(Singleton.class);
 			module.install(new CacheAnnotationsModule());
 		}
 
