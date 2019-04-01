@@ -14,7 +14,8 @@ module com.jwebmp.guicedhazelcast {
 	requires org.hibernate.orm.jcache;
 	requires cache.api;
 	requires io.github.classgraph;
-	requires org.apache.commons.io;
+
+	requires transitive org.apache.commons.io;
 
 	requires com.google.common;
 
