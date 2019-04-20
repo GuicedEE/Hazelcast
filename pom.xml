@@ -22,12 +22,14 @@
         <dependency>
             <groupId>com.jwebmp.guicedee.persistence</groupId>
             <artifactId>guiced-persistence-hibernateproperties-reader</artifactId>
+            <type>jar</type>
         </dependency>
 
         <dependency>
             <groupId>com.jwebmp.guicedee.persistence</groupId>
             <artifactId>guiced-persistence-btm</artifactId>
             <scope>test</scope>
+            <type>jar</type>
         </dependency>
 
         <dependency>
@@ -53,32 +55,38 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
+            <type>jar</type>
         </dependency>
 
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-jcache</artifactId>
+            <type>jar</type>
         </dependency>
 
         <dependency>
             <groupId>org.jsr107.ri</groupId>
             <artifactId>cache-annotations-ri-guice</artifactId>
+            <type>jar</type>
         </dependency>
 
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>test</scope>
+            <type>jar</type>
         </dependency>
 
         <dependency>
             <groupId>com.hazelcast</groupId>
             <artifactId>hazelcast-all</artifactId>
+            <type>jar</type>
         </dependency>
 
         <dependency>
             <groupId>com.jwebmp.jpms.commons</groupId>
             <artifactId>commons-io</artifactId>
+            <type>jar</type>
         </dependency>
 
     </dependencies>
