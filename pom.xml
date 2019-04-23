@@ -140,9 +140,8 @@
             <id>jdk11</id>
             <dependencies>
                 <dependency>
-                    <groupId>javax.activation</groupId>
-                    <artifactId>javax.activation-api</artifactId>
-                    <version>${javax.activation.version}</version>
+                    <groupId>com.jwebmp.thirdparty</groupId>
+                    <artifactId>javax.activation</artifactId>
                 </dependency>
             </dependencies>
         </profile>
