@@ -33,4 +33,7 @@ module com.jwebmp.guicedhazelcast {
 
 	provides com.jwebmp.guicedinjection.interfaces.IFileContentsScanner with com.jwebmp.guicedhazelcast.HazelcastConfigHandler;
 	provides com.jwebmp.guicedinjection.interfaces.IGuiceDefaultBinder with com.jwebmp.guicedhazelcast.implementations.HazelcastBinderGuice;
+
+	provides com.jwebmp.guicedinjection.interfaces.IGuicePostStartup with com.jwebmp.guicedhazelcast.implementations.HazelcastPostStartup;
+	provides com.jwebmp.guicedinjection.interfaces.IGuicePreStartup with com.jwebmp.guicedhazelcast.implementations.HazelcastPreStartup;
 }

@@ -73,6 +73,7 @@ public class HazelcastBinderGuice
 			                                 .next()
 			                                 .getCacheManager())
 			      .in(Singleton.class);
+
 			module.install(new CacheAnnotationsModule());
 		}
 

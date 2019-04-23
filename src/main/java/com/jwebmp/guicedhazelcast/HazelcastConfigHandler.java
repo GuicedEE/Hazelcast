@@ -20,7 +20,8 @@ public class HazelcastConfigHandler
 		implements IFileContentsScanner
 {
 	private static final Logger log = Logger.getLogger("HazelcastConfigHandler");
-	public static boolean diagnosticsEnabled = true;
+	public static boolean diagnosticsEnabled = false;
+	public static boolean startLocal = false;
 	private static String hazelcastConfigFileName = "hazelcast-client.xml";
 	private static byte[] hazelcastConfig;
 

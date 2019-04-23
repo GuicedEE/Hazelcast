@@ -22,6 +22,11 @@ public class HazelcastClientProvider
 	@Override
 	public HazelcastInstance get()
 	{
+		if (HazelcastPreStartup.instance != null)
+		{
+			return HazelcastPreStartup.instance;
+		}
+
 		ClientConfig config = new ClientConfig();
 		Set<IGuicedHazelcastClientConfig> configSet = GuiceContext.instance()
 		                                                          .getLoader(IGuicedHazelcastClientConfig.class, true, ServiceLoader.load(IGuicedHazelcastClientConfig.class));
