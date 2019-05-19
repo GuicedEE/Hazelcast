@@ -65,7 +65,7 @@
         </dependency>
 
         <dependency>
-            <groupId>org.jsr107.ri</groupId>
+            <groupId>com.jwebmp.thirdparty.jcache</groupId>
             <artifactId>cache-annotations-ri-guice</artifactId>
             <type>jar</type>
         </dependency>
