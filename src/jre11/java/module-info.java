@@ -36,4 +36,6 @@ module com.jwebmp.guicedhazelcast {
 
 	provides com.jwebmp.guicedinjection.interfaces.IGuicePostStartup with com.jwebmp.guicedhazelcast.implementations.HazelcastPostStartup;
 	provides com.jwebmp.guicedinjection.interfaces.IGuicePreStartup with com.jwebmp.guicedhazelcast.implementations.HazelcastPreStartup;
+
+	opens com.jwebmp.guicedhazelcast.implementations to com.google.guice;
 }
