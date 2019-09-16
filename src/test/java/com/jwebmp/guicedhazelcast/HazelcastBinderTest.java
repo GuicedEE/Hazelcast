@@ -22,6 +22,7 @@ public class HazelcastBinderTest
 	@Test
 	public void testCaching()
 	{
+		HazelcastConfigHandler.startLocal=true;
 		LogFactory.configureConsoleColourOutput(Level.FINE);
 		LogColourFormatter.setRenderBlack(false);
 
