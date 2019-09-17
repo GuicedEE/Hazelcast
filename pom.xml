@@ -53,13 +53,13 @@
         </dependency>
 
         <dependency>
-            <groupId>org.hibernate</groupId>
+            <groupId>com.jwebmp.thirdparty.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
             <type>jar</type>
         </dependency>
 
         <dependency>
-            <groupId>org.hibernate</groupId>
+            <groupId>com.jwebmp.thirdparty.hibernate</groupId>
             <artifactId>hibernate-jcache</artifactId>
             <type>jar</type>
         </dependency>
