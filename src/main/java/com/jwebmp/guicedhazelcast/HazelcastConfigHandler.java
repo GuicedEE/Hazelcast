@@ -1,6 +1,6 @@
-package com.jwebmp.guicedhazelcast;
+package com.guicedee.guicedhazelcast;
 
-import com.jwebmp.guicedinjection.interfaces.IFileContentsScanner;
+import com.guicedee.guicedinjection.interfaces.IFileContentsScanner;
 import io.github.classgraph.Resource;
 import io.github.classgraph.ResourceList;
 import org.apache.commons.io.FileUtils;

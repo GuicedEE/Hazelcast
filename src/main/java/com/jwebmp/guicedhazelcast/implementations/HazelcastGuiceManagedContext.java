@@ -1,7 +1,7 @@
-package com.jwebmp.guicedhazelcast.implementations;
+package com.guicedee.guicedhazelcast.implementations;
 
 import com.hazelcast.core.ManagedContext;
-import com.jwebmp.guicedinjection.GuiceContext;
+import com.guicedee.guicedinjection.GuiceContext;
 
 public class HazelcastGuiceManagedContext
 		implements ManagedContext

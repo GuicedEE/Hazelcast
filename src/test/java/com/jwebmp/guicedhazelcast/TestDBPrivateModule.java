@@ -1,8 +1,8 @@
-package com.jwebmp.guicedhazelcast;
+package com.guicedee.guicedhazelcast;
 
-import com.jwebmp.guicedpersistence.btm.BTMConnectionBaseInfo;
-import com.jwebmp.guicedpersistence.db.DatabaseModule;
-import com.jwebmp.guicedpersistence.db.ConnectionBaseInfo;
+import com.guicedee.guicedpersistence.btm.BTMConnectionBaseInfo;
+import com.guicedee.guicedpersistence.db.DatabaseModule;
+import com.guicedee.guicedpersistence.db.ConnectionBaseInfo;
 import com.oracle.jaxb21.PersistenceUnit;
 
 import javax.validation.constraints.NotNull;

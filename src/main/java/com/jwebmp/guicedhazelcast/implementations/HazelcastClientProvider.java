@@ -1,14 +1,14 @@
-package com.jwebmp.guicedhazelcast.implementations;
+package com.guicedee.guicedhazelcast.implementations;
 
 import com.google.inject.Provider;
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.config.GroupConfig;
 import com.hazelcast.core.HazelcastInstance;
-import com.jwebmp.guicedhazelcast.HazelcastEntityManagerProperties;
-import com.jwebmp.guicedhazelcast.services.IGuicedHazelcastClientConfig;
-import com.jwebmp.guicedinjection.GuiceContext;
-import com.jwebmp.logger.LogFactory;
+import com.guicedee.guicedhazelcast.HazelcastEntityManagerProperties;
+import com.guicedee.guicedhazelcast.services.IGuicedHazelcastClientConfig;
+import com.guicedee.guicedinjection.GuiceContext;
+import com.guicedee.logger.LogFactory;
 
 import java.util.ServiceLoader;
 import java.util.Set;
@@ -41,10 +41,6 @@ public class HazelcastClientProvider
 			if (HazelcastEntityManagerProperties.getGroupName() != null)
 			{
 				groupConfig.setName(HazelcastEntityManagerProperties.getGroupName());
-			}
-			if (HazelcastEntityManagerProperties.getGroupPass() != null)
-			{
-				groupConfig.setPassword(HazelcastEntityManagerProperties.getGroupPass());
 			}
 		}
 		return HazelcastClient.newHazelcastClient(config);

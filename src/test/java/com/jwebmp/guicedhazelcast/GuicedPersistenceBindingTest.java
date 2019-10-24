@@ -1,10 +1,10 @@
-package com.jwebmp.guicedhazelcast;
+package com.guicedee.guicedhazelcast;
 
 import com.google.inject.persist.UnitOfWork;
-import com.jwebmp.guicedinjection.GuiceContext;
-import com.jwebmp.guicedpersistence.btm.implementation.BTMAutomatedTransactionHandler;
-import com.jwebmp.logger.LogFactory;
-import com.jwebmp.logger.logging.LogColourFormatter;
+import com.guicedee.guicedinjection.GuiceContext;
+import com.guicedee.guicedpersistence.btm.implementation.BTMAutomatedTransactionHandler;
+import com.guicedee.logger.LogFactory;
+import com.guicedee.logger.logging.LogColourFormatter;
 import org.junit.jupiter.api.Test;
 
 import javax.persistence.EntityManager;
@@ -17,7 +17,8 @@ public class GuicedPersistenceBindingTest
 	{
 		LogFactory.configureConsoleSingleLineOutput(Level.FINE);
 		LogColourFormatter.setRenderBlack(false);
-		HazelcastConfigHandler.startLocal=true;
+
+		HazelcastConfigHandler.startLocal = true;
 
 		GuiceContext.inject();
 

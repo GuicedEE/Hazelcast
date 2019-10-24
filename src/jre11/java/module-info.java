@@ -1,16 +1,28 @@
-module com.jwebmp.guicedhazelcast {
-	exports com.jwebmp.guicedhazelcast;
+import com.guicedee.guicedhazelcast.HazelcastConfigHandler;
+import com.guicedee.guicedhazelcast.HazelcastEntityManagerProperties;
+import com.guicedee.guicedhazelcast.implementations.HazelcastBinderGuice;
+import com.guicedee.guicedhazelcast.implementations.HazelcastGuiceScanExclusions;
+import com.guicedee.guicedhazelcast.implementations.HazelcastPostStartup;
+import com.guicedee.guicedhazelcast.implementations.HazelcastPreStartup;
+import com.guicedee.guicedhazelcast.services.IGuicedHazelcastClientConfig;
+import com.guicedee.guicedhazelcast.services.IGuicedHazelcastServerConfig;
+import com.guicedee.guicedinjection.interfaces.*;
+import com.guicedee.guicedpersistence.services.IPropertiesEntityManagerReader;
+
+module com.guicedee.guicedhazelcast {
+	exports com.guicedee.guicedhazelcast;
+	exports com.guicedee.guicedhazelcast.services;
 
 	requires com.google.guice;
-	requires hazelcast.all;
+	requires com.hazelcast.all;
 
-	requires com.jwebmp.guicedinjection;
-	requires com.jwebmp.logmaster;
+	requires com.guicedee.guicedinjection;
+	requires com.guicedee.logmaster;
 	requires java.logging;
 	requires cache.annotations.ri.guice;
 	requires java.validation;
 
-	requires com.jwebmp.guicedpersistence;
+	requires com.guicedee.guicedpersistence;
 	requires org.hibernate.orm.jcache;
 	requires cache.api;
 	requires io.github.classgraph;
@@ -19,25 +31,27 @@ module com.jwebmp.guicedhazelcast {
 
 	requires com.google.common;
 
-	requires transitive jdk.unsupported;
+	requires jdk.unsupported;
 
-	requires com.jwebmp.guicedpersistence.readers.hibernateproperties;
+	requires com.guicedee.guicedpersistence.readers.hibernateproperties;
 	requires javax.inject;
 
-	uses com.jwebmp.guicedhazelcast.services.IGuicedHazelcastClientConfig;
+	uses IGuicedHazelcastClientConfig;
+	uses IGuicedHazelcastServerConfig;
 
-	provides com.jwebmp.guicedpersistence.services.IPropertiesEntityManagerReader with com.jwebmp.guicedhazelcast.HazelcastEntityManagerProperties;
+	provides IPropertiesEntityManagerReader with HazelcastEntityManagerProperties;
 
-	provides com.jwebmp.guicedinjection.interfaces.IGuiceScanModuleExclusions with com.jwebmp.guicedhazelcast.implementations.HazelcastGuiceScanExclusions;
-	provides com.jwebmp.guicedinjection.interfaces.IGuiceScanJarExclusions with com.jwebmp.guicedhazelcast.implementations.HazelcastGuiceScanExclusions;
+	provides IGuiceScanModuleExclusions with HazelcastGuiceScanExclusions;
+	provides IGuiceScanJarExclusions with HazelcastGuiceScanExclusions;
 
-	provides com.jwebmp.guicedinjection.interfaces.IFileContentsScanner with com.jwebmp.guicedhazelcast.HazelcastConfigHandler;
-	provides com.jwebmp.guicedinjection.interfaces.IGuiceDefaultBinder with com.jwebmp.guicedhazelcast.implementations.HazelcastBinderGuice;
+	provides IFileContentsScanner with HazelcastConfigHandler;
+	provides IGuiceDefaultBinder with HazelcastBinderGuice;
 
-	provides com.jwebmp.guicedinjection.interfaces.IGuicePostStartup with com.jwebmp.guicedhazelcast.implementations.HazelcastPostStartup;
-	provides com.jwebmp.guicedinjection.interfaces.IGuicePreStartup with com.jwebmp.guicedhazelcast.implementations.HazelcastPreStartup;
+	provides IGuicePostStartup with HazelcastPostStartup;
+	provides IGuicePreStartup with HazelcastPreStartup;
 
-	opens com.jwebmp.guicedhazelcast.implementations to com.google.guice;
-	opens com.jwebmp.guicedhazelcast to com.google.guice;
-	opens com.jwebmp.guicedhazelcast.services to com.google.guice;
+	opens com.guicedee.guicedhazelcast to com.google.guice;
+	opens com.guicedee.guicedhazelcast.annotations to com.google.guice;
+	opens com.guicedee.guicedhazelcast.implementations to com.google.guice;
+	opens com.guicedee.guicedhazelcast.services to com.google.guice;
 }

@@ -1,6 +1,6 @@
-package com.jwebmp.guicedhazelcast.implementations;
+package com.guicedee.guicedhazelcast.implementations;
 
-import com.jwebmp.guicedinjection.interfaces.IGuicePostStartup;
+import com.guicedee.guicedinjection.interfaces.IGuicePostStartup;
 
 public class HazelcastPostStartup
 		implements IGuicePostStartup<HazelcastPostStartup>

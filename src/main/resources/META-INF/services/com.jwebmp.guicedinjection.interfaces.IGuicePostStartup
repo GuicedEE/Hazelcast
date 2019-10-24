@@ -1,1 +1,1 @@
-com.jwebmp.guicedhazelcast.implementations.HazelcastPostStartup
+com.guicedee.guicedhazelcast.implementations.HazelcastPostStartup

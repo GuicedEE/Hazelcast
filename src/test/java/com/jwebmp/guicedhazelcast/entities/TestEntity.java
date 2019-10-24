@@ -1,4 +1,4 @@
-package com.jwebmp.guicedhazelcast.entities;
+package com.guicedee.guicedhazelcast.entities;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;

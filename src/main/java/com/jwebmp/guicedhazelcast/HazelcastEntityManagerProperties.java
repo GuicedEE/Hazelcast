@@ -1,6 +1,6 @@
-package com.jwebmp.guicedhazelcast;
+package com.guicedee.guicedhazelcast;
 
-import com.jwebmp.guicedpersistence.services.IPropertiesEntityManagerReader;
+import com.guicedee.guicedpersistence.services.IPropertiesEntityManagerReader;
 import com.oracle.jaxb21.PersistenceUnit;
 
 import java.util.HashMap;
@@ -33,10 +33,6 @@ public class HazelcastEntityManagerProperties
 	 * The given group name to contact Hazelcast
 	 */
 	private static String groupName;
-	/**
-	 * The applied password for the Hazelcast instance
-	 */
-	private static String groupPass;
 	/**
 	 * The instance for hazelcast
 	 */
@@ -123,26 +119,6 @@ public class HazelcastEntityManagerProperties
 	}
 
 	/**
-	 * The applied password for the Hazelcast instance
-	 *
-	 * @return
-	 */
-	public static String getGroupPass()
-	{
-		return HazelcastEntityManagerProperties.groupPass;
-	}
-
-	/**
-	 * The applied password for the Hazelcast instance
-	 *
-	 * @param groupPass
-	 */
-	public static void setGroupPass(String groupPass)
-	{
-		HazelcastEntityManagerProperties.groupPass = groupPass;
-	}
-
-	/**
 	 * The instance for hazelcast
 	 *
 	 * @return
@@ -193,11 +169,6 @@ public class HazelcastEntityManagerProperties
 		{
 			props.put(HazelcastNativeClientProperty, "true");
 			props.put("hibernate.cache.hazelcast.native_client_group", HazelcastEntityManagerProperties.groupName);
-		}
-		if (HazelcastEntityManagerProperties.groupPass != null)
-		{
-			props.put(HazelcastNativeClientProperty, "true");
-			props.put("hibernate.cache.hazelcast.native_client_password", HazelcastEntityManagerProperties.groupPass);
 		}
 		if (HazelcastEntityManagerProperties.instanceName != null)
 		{

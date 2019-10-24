@@ -1,4 +1,4 @@
-package com.jwebmp.guicedhazelcast;
+package com.guicedee.guicedhazelcast;
 
 import com.google.inject.BindingAnnotation;
 
