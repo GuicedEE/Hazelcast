@@ -28,7 +28,7 @@ public class HazelcastGuiceScanExclusions
 	public @NotNull Set<String> excludeModules()
 	{
 		Set<String> strings = new HashSet<>();
-		strings.add("com.guicedee.jpms.guicedhazelcast");
+		strings.add("com.guicedee.guicedhazelcast");
 		strings.add("hazelcast.all");
 		strings.add("cache.annotations.ri.guice");
 		strings.add("org.hibernate.orm.jcache");
