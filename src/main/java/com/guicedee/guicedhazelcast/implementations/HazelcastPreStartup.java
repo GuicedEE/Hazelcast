@@ -23,8 +23,8 @@ public class HazelcastPreStartup
 				hostname = "localhost";
 			}
 			Config cfg = new Config();
-			cfg.getGroupConfig()
-			   .setName(hostname);
+		//	cfg.getGroupConfig()
+		//	   .setName(hostname);
 			instance = Hazelcast.newHazelcastInstance(cfg);
 		}
 	}

@@ -1,13 +1,3 @@
-import com.guicedee.guicedhazelcast.HazelcastConfigHandler;
-import com.guicedee.guicedhazelcast.HazelcastEntityManagerProperties;
-import com.guicedee.guicedhazelcast.implementations.HazelcastBinderGuice;
-import com.guicedee.guicedhazelcast.implementations.HazelcastGuiceScanExclusions;
-import com.guicedee.guicedhazelcast.implementations.HazelcastPostStartup;
-import com.guicedee.guicedhazelcast.implementations.HazelcastPreStartup;
-import com.guicedee.guicedhazelcast.services.IGuicedHazelcastClientConfig;
-import com.guicedee.guicedhazelcast.services.IGuicedHazelcastServerConfig;
-import com.guicedee.guicedinjection.interfaces.*;
-import com.guicedee.guicedpersistence.services.IPropertiesEntityManagerReader;
 
 module com.guicedee.guicedhazelcast {
 	exports com.guicedee.guicedhazelcast;
@@ -36,19 +26,19 @@ module com.guicedee.guicedhazelcast {
 	requires com.guicedee.guicedpersistence.readers.hibernateproperties;
 	requires javax.inject;
 
-	uses IGuicedHazelcastClientConfig;
-	uses IGuicedHazelcastServerConfig;
+	uses com.guicedee.guicedhazelcast.services.IGuicedHazelcastClientConfig;
+	uses com.guicedee.guicedhazelcast.services.IGuicedHazelcastServerConfig;
 
-	provides IPropertiesEntityManagerReader with HazelcastEntityManagerProperties;
+	provides com.guicedee.guicedpersistence.services.IPropertiesEntityManagerReader with com.guicedee.guicedhazelcast.HazelcastEntityManagerProperties;
 
-	provides IGuiceScanModuleExclusions with HazelcastGuiceScanExclusions;
-	provides IGuiceScanJarExclusions with HazelcastGuiceScanExclusions;
+	provides com.guicedee.guicedinjection.interfaces.IGuiceScanModuleExclusions with com.guicedee.guicedhazelcast.implementations.HazelcastGuiceScanExclusions;
+	provides com.guicedee.guicedinjection.interfaces.IGuiceScanJarExclusions with com.guicedee.guicedhazelcast.implementations.HazelcastGuiceScanExclusions;
 
-	provides IFileContentsScanner with HazelcastConfigHandler;
-	provides IGuiceDefaultBinder with HazelcastBinderGuice;
+	provides com.guicedee.guicedinjection.interfaces.IFileContentsScanner with com.guicedee.guicedhazelcast.HazelcastConfigHandler;
+	provides com.guicedee.guicedinjection.interfaces.IGuiceDefaultBinder with com.guicedee.guicedhazelcast.implementations.HazelcastBinderGuice;
 
-	provides IGuicePostStartup with HazelcastPostStartup;
-	provides IGuicePreStartup with HazelcastPreStartup;
+	provides com.guicedee.guicedinjection.interfaces.IGuicePostStartup with com.guicedee.guicedhazelcast.implementations.HazelcastPostStartup;
+	provides com.guicedee.guicedinjection.interfaces.IGuicePreStartup with com.guicedee.guicedhazelcast.implementations.HazelcastPreStartup;
 
 	opens com.guicedee.guicedhazelcast to com.google.guice;
 	opens com.guicedee.guicedhazelcast.annotations to com.google.guice;
