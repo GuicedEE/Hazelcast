@@ -1,3 +1,4 @@
+import com.guicedee.guicedhazelcast.HazelcastProperties;
 
 module com.guicedee.guicedhazelcast {
 	exports com.guicedee.guicedhazelcast;
@@ -29,12 +30,11 @@ module com.guicedee.guicedhazelcast {
 	uses com.guicedee.guicedhazelcast.services.IGuicedHazelcastClientConfig;
 	uses com.guicedee.guicedhazelcast.services.IGuicedHazelcastServerConfig;
 
-	provides com.guicedee.guicedpersistence.services.IPropertiesEntityManagerReader with com.guicedee.guicedhazelcast.HazelcastEntityManagerProperties;
+	provides com.guicedee.guicedpersistence.services.IPropertiesEntityManagerReader with HazelcastProperties;
 
 	provides com.guicedee.guicedinjection.interfaces.IGuiceScanModuleExclusions with com.guicedee.guicedhazelcast.implementations.HazelcastGuiceScanExclusions;
 	provides com.guicedee.guicedinjection.interfaces.IGuiceScanJarExclusions with com.guicedee.guicedhazelcast.implementations.HazelcastGuiceScanExclusions;
 
-	provides com.guicedee.guicedinjection.interfaces.IFileContentsScanner with com.guicedee.guicedhazelcast.HazelcastConfigHandler;
 	provides com.guicedee.guicedinjection.interfaces.IGuiceDefaultBinder with com.guicedee.guicedhazelcast.implementations.HazelcastBinderGuice;
 
 	provides com.guicedee.guicedinjection.interfaces.IGuicePostStartup with com.guicedee.guicedhazelcast.implementations.HazelcastPostStartup;

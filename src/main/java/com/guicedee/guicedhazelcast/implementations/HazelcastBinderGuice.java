@@ -1,12 +1,11 @@
 package com.guicedee.guicedhazelcast.implementations;
 
 import com.google.inject.Singleton;
-import com.hazelcast.core.HazelcastInstance;
-import com.guicedee.guicedhazelcast.HazelcastConfigHandler;
 import com.guicedee.guicedinjection.GuiceContext;
 import com.guicedee.guicedinjection.abstractions.GuiceInjectorModule;
 import com.guicedee.guicedinjection.interfaces.IGuiceDefaultBinder;
 import com.guicedee.logger.LogFactory;
+import com.hazelcast.core.HazelcastInstance;
 import org.jsr107.ri.annotations.guice.module.CacheAnnotationsModule;
 
 import javax.cache.CacheManager;
@@ -46,7 +45,6 @@ public class HazelcastBinderGuice
 		log.config("Configuring Hazelcast");
 		// Setup Hazelcast logging to JDK with diagnostics
 		System.setProperty("hazelcast.logging.type", "jdk");
-		System.setProperty("hazelcast.diagnostics.enabled", String.valueOf(HazelcastConfigHandler.diagnosticsEnabled));
 
 		Set<CachingProvider> providers = new HashSet<>();
 		for (CachingProvider provider : Caching.getCachingProviders())

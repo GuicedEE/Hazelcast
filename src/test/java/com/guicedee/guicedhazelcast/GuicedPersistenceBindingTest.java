@@ -18,7 +18,7 @@ public class GuicedPersistenceBindingTest
 		LogFactory.configureConsoleSingleLineOutput(Level.FINE);
 		LogColourFormatter.setRenderBlack(false);
 
-		HazelcastConfigHandler.startLocal = true;
+		HazelcastProperties.setStartLocal(true);
 
 		GuiceContext.inject();
 

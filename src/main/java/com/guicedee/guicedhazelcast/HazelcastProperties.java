@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Properties;
 
 @SuppressWarnings("unused")
-public class HazelcastEntityManagerProperties
+public class HazelcastProperties
 		implements IPropertiesEntityManagerReader
 {
 	/**
@@ -45,7 +45,7 @@ public class HazelcastEntityManagerProperties
 	 */
 	public static String getRegionName()
 	{
-		return HazelcastEntityManagerProperties.regionName;
+		return HazelcastProperties.regionName;
 	}
 
 	/**
@@ -55,7 +55,7 @@ public class HazelcastEntityManagerProperties
 	 */
 	public static void setRegionName(String regionName)
 	{
-		HazelcastEntityManagerProperties.regionName = regionName;
+		HazelcastProperties.regionName = regionName;
 	}
 
 	/**
@@ -65,7 +65,7 @@ public class HazelcastEntityManagerProperties
 	 */
 	public static boolean isUseLocalRegionFactory()
 	{
-		return HazelcastEntityManagerProperties.useLocalRegionFactory;
+		return HazelcastProperties.useLocalRegionFactory;
 	}
 
 	/**
@@ -75,7 +75,7 @@ public class HazelcastEntityManagerProperties
 	 */
 	public static void setUseLocalRegionFactory(boolean useLocalRegionFactory)
 	{
-		HazelcastEntityManagerProperties.useLocalRegionFactory = useLocalRegionFactory;
+		HazelcastProperties.useLocalRegionFactory = useLocalRegionFactory;
 	}
 
 	/**
@@ -85,7 +85,7 @@ public class HazelcastEntityManagerProperties
 	 */
 	public static String getAddress()
 	{
-		return HazelcastEntityManagerProperties.address;
+		return HazelcastProperties.address;
 	}
 
 	/**
@@ -95,7 +95,7 @@ public class HazelcastEntityManagerProperties
 	 */
 	public static void setAddress(String address)
 	{
-		HazelcastEntityManagerProperties.address = address;
+		HazelcastProperties.address = address;
 	}
 
 	/**
@@ -105,7 +105,7 @@ public class HazelcastEntityManagerProperties
 	 */
 	public static String getGroupName()
 	{
-		return HazelcastEntityManagerProperties.groupName;
+		return HazelcastProperties.groupName;
 	}
 
 	/**
@@ -115,7 +115,7 @@ public class HazelcastEntityManagerProperties
 	 */
 	public static void setGroupName(String groupName)
 	{
-		HazelcastEntityManagerProperties.groupName = groupName;
+		HazelcastProperties.groupName = groupName;
 	}
 
 	/**
@@ -125,7 +125,7 @@ public class HazelcastEntityManagerProperties
 	 */
 	public static String getInstanceName()
 	{
-		return HazelcastEntityManagerProperties.instanceName;
+		return HazelcastProperties.instanceName;
 	}
 
 	/**
@@ -135,8 +135,10 @@ public class HazelcastEntityManagerProperties
 	 */
 	public static void setInstanceName(String instanceName)
 	{
-		HazelcastEntityManagerProperties.instanceName = instanceName;
+		HazelcastProperties.instanceName = instanceName;
 	}
+
+	private static boolean startLocal;
 
 	@Override
 	public Map<String, String> processProperties(PersistenceUnit persistenceUnit, Properties incomingProperties)
@@ -159,28 +161,38 @@ public class HazelcastEntityManagerProperties
 			props.put("hibernate.cache.use_minimal_puts", "true");
 		}
 
-		if (HazelcastEntityManagerProperties.address != null)
+		if (HazelcastProperties.address != null)
 		{
 			props.put(HazelcastNativeClientProperty, "true");
-			props.put("hibernate.cache.hazelcast.native_client_hosts", HazelcastEntityManagerProperties.address);
-			props.put("hibernate.cache.hazelcast.native_client_address", HazelcastEntityManagerProperties.address);
+			props.put("hibernate.cache.hazelcast.native_client_hosts", HazelcastProperties.address);
+			props.put("hibernate.cache.hazelcast.native_client_address", HazelcastProperties.address);
 		}
-		if (HazelcastEntityManagerProperties.groupName != null)
+		if (HazelcastProperties.groupName != null)
 		{
 			props.put(HazelcastNativeClientProperty, "true");
-			props.put("hibernate.cache.hazelcast.native_client_group", HazelcastEntityManagerProperties.groupName);
+			props.put("hibernate.cache.hazelcast.native_client_group", HazelcastProperties.groupName);
 		}
-		if (HazelcastEntityManagerProperties.instanceName != null)
+		if (HazelcastProperties.instanceName != null)
 		{
 			props.put(HazelcastNativeClientProperty, "true");
-			props.put("hibernate.cache.hazelcast.instance_name", HazelcastEntityManagerProperties.instanceName);
+			props.put("hibernate.cache.hazelcast.instance_name", HazelcastProperties.instanceName);
 		}
 
-		if (HazelcastEntityManagerProperties.regionName != null)
+		if (HazelcastProperties.regionName != null)
 		{
-			props.put("hibernate.cache.region_prefix", HazelcastEntityManagerProperties.regionName);
+			props.put("hibernate.cache.region_prefix", HazelcastProperties.regionName);
 		}
 
 		return props;
+	}
+
+	public static boolean isStartLocal()
+	{
+		return startLocal;
+	}
+
+	public static void setStartLocal(boolean startLocal)
+	{
+		HazelcastProperties.startLocal = startLocal;
 	}
 }

@@ -25,7 +25,7 @@ public class HazelcastBinderTest
 		LogFactory.configureConsoleColourOutput(Level.FINE);
 		LogColourFormatter.setRenderBlack(false);
 
-		HazelcastConfigHandler.startLocal = true;
+		HazelcastProperties.setStartLocal(true);
 
 		HazelcastBinderTest c = GuiceContext.get(HazelcastBinderTest.class);
 		test = c;
