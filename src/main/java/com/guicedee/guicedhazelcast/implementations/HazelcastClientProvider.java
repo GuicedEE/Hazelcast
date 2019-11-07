@@ -2,6 +2,7 @@ package com.guicedee.guicedhazelcast.implementations;
 
 import com.google.inject.Provider;
 import com.guicedee.guicedhazelcast.HazelcastProperties;
+import com.guicedee.guicedhazelcast.services.HazelcastPreStartup;
 import com.guicedee.guicedhazelcast.services.IGuicedHazelcastClientConfig;
 import com.guicedee.guicedinjection.GuiceContext;
 import com.guicedee.logger.LogFactory;

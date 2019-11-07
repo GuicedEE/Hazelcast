@@ -1,4 +1,5 @@
 import com.guicedee.guicedhazelcast.HazelcastProperties;
+import com.guicedee.guicedhazelcast.services.HazelcastPreStartup;
 
 module com.guicedee.guicedhazelcast {
 	exports com.guicedee.guicedhazelcast;
@@ -36,7 +37,7 @@ module com.guicedee.guicedhazelcast {
 	provides com.guicedee.guicedinjection.interfaces.IGuiceDefaultBinder with com.guicedee.guicedhazelcast.implementations.HazelcastBinderGuice;
 
 	provides com.guicedee.guicedinjection.interfaces.IGuicePostStartup with com.guicedee.guicedhazelcast.implementations.HazelcastPostStartup;
-	provides com.guicedee.guicedinjection.interfaces.IGuicePreStartup with com.guicedee.guicedhazelcast.implementations.HazelcastPreStartup;
+	provides com.guicedee.guicedinjection.interfaces.IGuicePreStartup with HazelcastPreStartup;
 
 	opens com.guicedee.guicedhazelcast to com.google.guice;
 	opens com.guicedee.guicedhazelcast.annotations to com.google.guice;

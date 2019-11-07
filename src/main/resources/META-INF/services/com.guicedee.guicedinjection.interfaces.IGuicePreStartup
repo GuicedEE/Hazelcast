@@ -1,1 +1,1 @@
-com.guicedee.guicedhazelcast.implementations.HazelcastPreStartup
+com.guicedee.guicedhazelcast.services.HazelcastPreStartup
