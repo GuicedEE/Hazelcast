@@ -22,8 +22,6 @@ module com.guicedee.guicedhazelcast {
 
 	requires com.google.common;
 
-	requires jdk.unsupported;
-
 	requires com.guicedee.guicedpersistence.readers.hibernateproperties;
 	requires javax.inject;
 
