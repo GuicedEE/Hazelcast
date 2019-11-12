@@ -33,7 +33,8 @@ module com.guicedee.guicedhazelcast {
 
 	provides com.guicedee.guicedinjection.interfaces.IGuiceScanModuleExclusions with com.guicedee.guicedhazelcast.implementations.HazelcastGuiceScanExclusions;
 	provides com.guicedee.guicedinjection.interfaces.IGuiceScanJarExclusions with com.guicedee.guicedhazelcast.implementations.HazelcastGuiceScanExclusions;
-
+	provides com.guicedee.guicedinjection.interfaces.IGuicePreDestroy with com.guicedee.guicedhazelcast.implementations.HazelcastClientProvider,
+															com.guicedee.guicedhazelcast.services.HazelcastPreStartup;
 	provides com.guicedee.guicedinjection.interfaces.IGuiceDefaultBinder with com.guicedee.guicedhazelcast.implementations.HazelcastBinderGuice;
 
 	provides com.guicedee.guicedinjection.interfaces.IGuicePostStartup with com.guicedee.guicedhazelcast.implementations.HazelcastPostStartup;

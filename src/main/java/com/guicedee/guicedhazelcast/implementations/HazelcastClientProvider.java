@@ -5,6 +5,7 @@ import com.guicedee.guicedhazelcast.HazelcastProperties;
 import com.guicedee.guicedhazelcast.services.HazelcastPreStartup;
 import com.guicedee.guicedhazelcast.services.IGuicedHazelcastClientConfig;
 import com.guicedee.guicedinjection.GuiceContext;
+import com.guicedee.guicedinjection.interfaces.IGuicePreDestroy;
 import com.guicedee.logger.LogFactory;
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
@@ -20,9 +21,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class HazelcastClientProvider
-		implements Provider<HazelcastInstance>
+		implements Provider<HazelcastInstance>, IGuicePreDestroy<HazelcastClientProvider>
 {
 	private static final Logger log = LogFactory.getLog("HazelcastClientProvider");
+
+	private static HazelcastInstance clientInstance;
 
 	@Override
 	public HazelcastInstance get()
@@ -31,6 +34,8 @@ public class HazelcastClientProvider
 		{
 			return HazelcastPreStartup.instance;
 		}
+		if(clientInstance != null)
+			return clientInstance;
 
 		ClientConfig config = new ClientConfig();
 		Set<IGuicedHazelcastClientConfig> configSet = GuiceContext.instance()
@@ -60,6 +65,16 @@ public class HazelcastClientProvider
 
 		config.setInstanceName(HazelcastProperties.getInstanceName());
 
-		return HazelcastClient.newHazelcastClient(config);
+		return clientInstance = HazelcastClient.newHazelcastClient(config);
+	}
+
+	@Override
+	public void onDestroy()
+	{
+		if(clientInstance != null)
+		{
+			clientInstance.shutdown();
+			clientInstance = null;
+		}
 	}
 }
