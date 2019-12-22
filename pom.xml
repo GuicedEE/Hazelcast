@@ -23,7 +23,6 @@
         <dependency>
             <groupId>com.guicedee.persistence</groupId>
             <artifactId>guiced-persistence-btm</artifactId>
-            <version>0.0.0_0-SNAPSHOT</version>
             <scope>test</scope>
             <type>jar</type>
         </dependency>
