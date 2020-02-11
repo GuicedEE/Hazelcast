@@ -6,7 +6,9 @@ module com.guicedee.guicedhazelcast {
 	exports com.guicedee.guicedhazelcast.services;
 
 	requires com.google.guice;
-	requires com.hazelcast.all;
+
+	//requires com.hazelcast.all;
+
 
 	requires com.guicedee.guicedinjection;
 	requires com.guicedee.logmaster;
@@ -25,6 +27,7 @@ module com.guicedee.guicedhazelcast {
 
 	requires com.guicedee.guicedpersistence.readers.hibernateproperties;
 	requires javax.inject;
+	requires com.hazelcast.all;
 
 	uses com.guicedee.guicedhazelcast.services.IGuicedHazelcastClientConfig;
 	uses com.guicedee.guicedhazelcast.services.IGuicedHazelcastServerConfig;
