@@ -5,6 +5,7 @@ import com.guicedee.guicedinjection.GuiceContext;
 import com.guicedee.guicedinjection.abstractions.GuiceInjectorModule;
 import com.guicedee.guicedinjection.interfaces.IGuiceDefaultBinder;
 import com.guicedee.logger.LogFactory;
+import com.hazelcast.client.cache.impl.HazelcastClientCachingProvider;
 import com.hazelcast.core.HazelcastInstance;
 import org.jsr107.ri.annotations.guice.module.CacheAnnotationsModule;
 
