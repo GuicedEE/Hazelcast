@@ -19,15 +19,11 @@ module com.guicedee.guicedhazelcast {
 
 	requires com.guicedee.guicedpersistence;
 	requires org.hibernate.orm.jcache;
-	requires cache.api;
 	requires io.github.classgraph;
 
 	requires transitive org.apache.commons.io;
 
-	requires com.google.common;
-
 	requires com.guicedee.guicedpersistence.readers.hibernateproperties;
-	requires javax.inject;
 
 	uses com.guicedee.guicedhazelcast.services.IGuicedHazelcastClientConfig;
 	uses com.guicedee.guicedhazelcast.services.IGuicedHazelcastServerConfig;

@@ -10,7 +10,6 @@ import com.guicedee.logger.LogFactory;
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.client.config.ClientNetworkConfig;
-import com.hazelcast.config.GroupConfig;
 import com.hazelcast.core.HazelcastInstance;
 
 import java.net.InetAddress;
@@ -58,12 +57,6 @@ public class HazelcastClientProvider
 
 		ClientNetworkConfig clientNetworkConfig = new ClientNetworkConfig();
 		clientNetworkConfig.addAddress(HazelcastProperties.getAddress());
-
-		GroupConfig groupConfig = new GroupConfig();
-		groupConfig.setName(HazelcastProperties.getGroupName());
-		config.setGroupConfig(groupConfig);
-
-		config.setInstanceName(HazelcastProperties.getInstanceName());
 
 		return clientInstance = HazelcastClient.newHazelcastClient(config);
 	}
