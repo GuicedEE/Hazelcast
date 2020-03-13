@@ -36,4 +36,9 @@ module com.guicedee.guicedhazelcast {
 
 	provides com.guicedee.guicedinjection.interfaces.IGuicePostStartup with com.guicedee.guicedhazelcast.implementations.HazelcastPostStartup;
 	provides com.guicedee.guicedinjection.interfaces.IGuicePreStartup with HazelcastPreStartup;
+
+	opens com.guicedee.guicedhazelcast to com.google.guice;
+	opens com.guicedee.guicedhazelcast.annotations to com.google.guice;
+	opens com.guicedee.guicedhazelcast.implementations to com.google.guice;
+	opens com.guicedee.guicedhazelcast.services to com.google.guice;
 }
