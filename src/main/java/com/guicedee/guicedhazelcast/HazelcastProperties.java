@@ -1,11 +1,15 @@
 package com.guicedee.guicedhazelcast;
 
+import com.guicedee.guicedhazelcast.services.HazelcastClientPreStartup;
 import com.guicedee.guicedpersistence.services.IPropertiesEntityManagerReader;
+import com.guicedee.logger.LogFactory;
 import com.oracle.jaxb21.PersistenceUnit;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+
+import static com.guicedee.guicedhazelcast.services.HazelcastClientPreStartup.*;
 
 @SuppressWarnings("unused")
 public class HazelcastProperties
@@ -161,26 +165,23 @@ public class HazelcastProperties
 			props.put("hibernate.cache.use_minimal_puts", "true");
 		}
 
-		if (HazelcastProperties.address != null)
-		{
-			props.put(HazelcastNativeClientProperty, "true");
-			props.put("hibernate.cache.hazelcast.native_client_hosts", HazelcastProperties.address);
-			props.put("hibernate.cache.hazelcast.native_client_address", HazelcastProperties.address);
-		}
-		if (HazelcastProperties.groupName != null)
-		{
-			props.put(HazelcastNativeClientProperty, "true");
-			props.put("hibernate.cache.hazelcast.native_client_group", HazelcastProperties.groupName);
-		}
 		if (HazelcastProperties.instanceName != null)
 		{
-			props.put(HazelcastNativeClientProperty, "true");
 			props.put("hibernate.cache.hazelcast.instance_name", HazelcastProperties.instanceName);
+			props.put("hibernate.cache.hazelcast.cluster_name", HazelcastProperties.groupName);
 		}
 
 		if (HazelcastProperties.regionName != null)
 		{
 			props.put("hibernate.cache.region_prefix", HazelcastProperties.regionName);
+			if (HazelcastProperties.isUseLocalRegionFactory())
+			{
+				props.put("hibernate.cache.region.factory_class", "com.hazelcast.hibernate.HazelcastLocalCacheRegionFactory");
+			}
+			else
+			{
+				props.put("hibernate.cache.region.factory_class", "com.hazelcast.hibernate.HazelcastCacheRegionFactory");
+			}
 		}
 
 		return props;

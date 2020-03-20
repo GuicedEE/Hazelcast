@@ -1,11 +1,12 @@
 package com.guicedee.guicedhazelcast.services;
 
+import com.guicedee.guicedinjection.interfaces.IDefaultService;
 import com.hazelcast.client.config.ClientConfig;
 
 /**
  * Configures the client config when called upon
  */
-public interface IGuicedHazelcastClientConfig
+public interface IGuicedHazelcastClientConfig<J extends IGuicedHazelcastClientConfig<J>> extends IDefaultService<J>
 {
 	/**
 	 * Sets up the configuration suite

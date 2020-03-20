@@ -75,7 +75,7 @@ public class HazelcastBinderGuice
 			module.install(new CacheAnnotationsModule());
 		}
 
-		log.config("Bound HazelcastInstance.class");
+		log.config("Binding HazelcastInstance.class");
 		module.bind(HazelcastInstance.class)
 		      .toProvider(new HazelcastClientProvider())
 		      .in(Singleton.class);

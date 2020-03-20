@@ -20,29 +20,35 @@ public class HazelcastPreStartup
 {
 
 	public static HazelcastInstance instance;
+	public static Config config;
 	private static final Logger log = LogFactory.getLog("HazelcastPreStartup");
 
-	public void onStartup() {
-		if (HazelcastProperties.isStartLocal()) {
-			Config config = new Config();
+	public void onStartup()
+	{
+		if(config == null)
+			config = new Config();
 
-            config.setProperty("hazelcast.client.shuffle.member.list", "true");
-            config.setProperty("hazelcast.client.heartbeat.timeout", "60000");
-            config.setProperty("hazelcast.client.heartbeat.interval", "5000");
-            config.setProperty("hazelcast.client.event.thread.count", "5");
-            config.setProperty("hazelcast.client.event.queue.capacity", "1000000");
-            config.setProperty("hazelcast.client.invocation.timeout.seconds", "120");
+		config.setProperty("hazelcast.client.shuffle.member.list", "true");
+		config.setProperty("hazelcast.client.heartbeat.timeout", "60000");
+		config.setProperty("hazelcast.client.heartbeat.interval", "5000");
+		config.setProperty("hazelcast.client.event.thread.count", "5");
+		config.setProperty("hazelcast.client.event.queue.capacity", "1000000");
+		config.setProperty("hazelcast.client.invocation.timeout.seconds", "120");
 
-            if(config.getNetworkConfig() == null)
-                config.setNetworkConfig(new NetworkConfig());
+		if (config.getNetworkConfig() == null)
+		{
+			config.setNetworkConfig(new NetworkConfig());
+		}
 
+		if (HazelcastProperties.isStartLocal())
+		{
+			@SuppressWarnings("rawtypes")
 			Set<IGuicedHazelcastServerConfig> configSet = GuiceContext.instance()
 			                                                          .getLoader(IGuicedHazelcastServerConfig.class, true, ServiceLoader.load(IGuicedHazelcastServerConfig.class));
-			for (IGuicedHazelcastServerConfig iGuicedHazelcastClientConfig : configSet)
+			for (IGuicedHazelcastServerConfig<?> iGuicedHazelcastClientConfig : configSet)
 			{
 				config = iGuicedHazelcastClientConfig.buildConfig(config);
 			}
-
 			log.config("Final Hazelcast Server Configuration - " + config.toString());
 			instance = Hazelcast.newHazelcastInstance(config);
 		}
@@ -51,10 +57,16 @@ public class HazelcastPreStartup
 	@Override
 	public void onDestroy()
 	{
-		if(instance != null)
+		if (instance != null)
 		{
 			instance.shutdown();
 			instance = null;
 		}
+	}
+
+	@Override
+	public Integer sortOrder()
+	{
+		return 45;
 	}
 }

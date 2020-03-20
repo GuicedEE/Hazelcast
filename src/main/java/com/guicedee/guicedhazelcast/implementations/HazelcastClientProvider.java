@@ -2,6 +2,7 @@ package com.guicedee.guicedhazelcast.implementations;
 
 import com.google.inject.Provider;
 import com.guicedee.guicedhazelcast.HazelcastProperties;
+import com.guicedee.guicedhazelcast.services.HazelcastClientPreStartup;
 import com.guicedee.guicedhazelcast.services.HazelcastPreStartup;
 import com.guicedee.guicedhazelcast.services.IGuicedHazelcastClientConfig;
 import com.guicedee.guicedinjection.GuiceContext;
@@ -19,52 +20,22 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static com.guicedee.guicedhazelcast.services.HazelcastClientPreStartup.*;
+
 public class HazelcastClientProvider
 		implements Provider<HazelcastInstance>, IGuicePreDestroy<HazelcastClientProvider>
 {
-	private static final Logger log = LogFactory.getLog("HazelcastClientProvider");
-
-	private static HazelcastInstance clientInstance;
 
 	@Override
 	public HazelcastInstance get()
 	{
-		if (HazelcastPreStartup.instance != null)
-		{
-			return HazelcastPreStartup.instance;
-		}
-		if(clientInstance != null)
-			return clientInstance;
-
-		ClientConfig config = new ClientConfig();
-		Set<IGuicedHazelcastClientConfig> configSet = GuiceContext.instance()
-		                                                          .getLoader(IGuicedHazelcastClientConfig.class, true, ServiceLoader.load(IGuicedHazelcastClientConfig.class));
-		for (IGuicedHazelcastClientConfig iGuicedHazelcastClientConfig : configSet)
-		{
-			config = iGuicedHazelcastClientConfig.buildConfig(config);
-		}
-		log.config("Final Hazelcast Client Configuration - " + config.toString());
-
-		try
-		{
-			config.addLabel(InetAddress.getLocalHost()
-			                           .getHostAddress());
-		}
-		catch (UnknownHostException e)
-		{
-			log.log(Level.SEVERE, "Unable to make an inet address from localhost", e);
-		}
-
-		ClientNetworkConfig clientNetworkConfig = new ClientNetworkConfig();
-		clientNetworkConfig.addAddress(HazelcastProperties.getAddress());
-
-		return clientInstance = HazelcastClient.newHazelcastClient(config);
+		return clientInstance;
 	}
 
 	@Override
 	public void onDestroy()
 	{
-		if(clientInstance != null)
+		if (clientInstance != null)
 		{
 			clientInstance.shutdown();
 			clientInstance = null;
