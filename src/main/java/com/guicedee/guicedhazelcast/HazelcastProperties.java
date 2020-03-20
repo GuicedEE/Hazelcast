@@ -165,9 +165,24 @@ public class HazelcastProperties
 			props.put("hibernate.cache.use_minimal_puts", "true");
 		}
 
+		if (HazelcastProperties.address != null)
+		{
+			props.put(HazelcastNativeClientProperty, "true");
+			props.put("hibernate.cache.hazelcast.native_client_hosts", HazelcastProperties.address);
+			props.put("hibernate.cache.hazelcast.native_client_address", HazelcastProperties.address);
+		}
+		if (HazelcastProperties.groupName != null)
+		{
+			props.put(HazelcastNativeClientProperty, "true");
+			props.put("hibernate.cache.hazelcast.native_client_group", HazelcastProperties.groupName);
+			props.put("hibernate.cache.hazelcast.native_client_cluster", HazelcastProperties.groupName);
+			props.put("hibernate.cache.hazelcast.native_client_cluster_name", HazelcastProperties.groupName);
+		}
+
 		if (HazelcastProperties.instanceName != null)
 		{
-			props.put("hibernate.cache.hazelcast.cluster_name", HazelcastProperties.groupName);
+			props.put(HazelcastNativeClientProperty, "true");
+			props.put("hibernate.cache.hazelcast.instance_name", HazelcastProperties.getInstanceName());
 		}
 
 		if (HazelcastProperties.regionName != null)
