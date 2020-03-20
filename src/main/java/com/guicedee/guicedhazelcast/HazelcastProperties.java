@@ -167,7 +167,6 @@ public class HazelcastProperties
 
 		if (HazelcastProperties.instanceName != null)
 		{
-			props.put("hibernate.cache.hazelcast.instance_name", HazelcastProperties.instanceName);
 			props.put("hibernate.cache.hazelcast.cluster_name", HazelcastProperties.groupName);
 		}
 
