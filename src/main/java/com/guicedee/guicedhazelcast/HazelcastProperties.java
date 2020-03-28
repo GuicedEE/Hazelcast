@@ -8,6 +8,7 @@ import com.oracle.jaxb21.PersistenceUnit;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.UUID;
 
 import static com.guicedee.guicedhazelcast.services.HazelcastClientPreStartup.*;
 
@@ -196,6 +197,11 @@ public class HazelcastProperties
 			{
 				props.put("hibernate.cache.region.factory_class", "com.hazelcast.hibernate.HazelcastCacheRegionFactory");
 			}
+		}
+
+		if (clientInstance != null)
+		{
+			props.put("hibernate.cache.hazelcast.instance_name",clientInstance.getName());
 		}
 
 		return props;

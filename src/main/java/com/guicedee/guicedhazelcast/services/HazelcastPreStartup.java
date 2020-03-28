@@ -28,13 +28,6 @@ public class HazelcastPreStartup
 		if(config == null)
 			config = new Config();
 
-		config.setProperty("hazelcast.client.shuffle.member.list", "true");
-		config.setProperty("hazelcast.client.heartbeat.timeout", "60000");
-		config.setProperty("hazelcast.client.heartbeat.interval", "5000");
-		config.setProperty("hazelcast.client.event.thread.count", "5");
-		config.setProperty("hazelcast.client.event.queue.capacity", "1000000");
-		config.setProperty("hazelcast.client.invocation.timeout.seconds", "120");
-
 		if (config.getNetworkConfig() == null)
 		{
 			config.setNetworkConfig(new NetworkConfig());

@@ -5,6 +5,7 @@ import com.guicedee.guicedinjection.GuiceContext;
 import com.guicedee.guicedinjection.interfaces.IGuicePreDestroy;
 import com.guicedee.guicedinjection.interfaces.IGuicePreStartup;
 import com.guicedee.logger.LogFactory;
+import com.hazelcast.client.Client;
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.client.config.ClientNetworkConfig;
@@ -17,6 +18,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ServiceLoader;
 import java.util.Set;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -39,6 +41,14 @@ public class HazelcastClientPreStartup
 		{
 			config = new ClientConfig();
 		}
+
+		config.setProperty("hazelcast.client.shuffle.member.list", "true");
+		config.setProperty("hazelcast.client.heartbeat.timeout", "60000");
+		config.setProperty("hazelcast.client.heartbeat.interval", "5000");
+		config.setProperty("hazelcast.client.event.thread.count", "5");
+		config.setProperty("hazelcast.client.event.queue.capacity", "1000000");
+		config.setProperty("hazelcast.client.invocation.timeout.seconds", "120");
+
 		@SuppressWarnings("rawtypes")
 		Set<IGuicedHazelcastClientConfig> configSet = GuiceContext.instance()
 		                                                          .getLoader(IGuicedHazelcastClientConfig.class, true, ServiceLoader.load(IGuicedHazelcastClientConfig.class));
@@ -55,16 +65,6 @@ public class HazelcastClientPreStartup
 		catch (UnknownHostException e)
 		{
 			log.log(Level.SEVERE, "Unable to make an inet address from localhost", e);
-		}
-
-		if (HazelcastPreStartup.instance != null)
-		{
-			config.getNetworkConfig()
-			      .getAddresses()
-			      .clear();
-			config.getNetworkConfig()
-			      .addAddress(HazelcastPreStartup.config.getNetworkConfig()
-			                                            .getPublicAddress());
 		}
 
 		ClientNetworkConfig clientNetworkConfig = new ClientNetworkConfig();
@@ -91,8 +91,13 @@ public class HazelcastClientPreStartup
 		}
 		System.setProperty("group.name", config.getClusterName());
 		System.setProperty("cluster.name", config.getClusterName());
-
-		clientInstance = HazelcastClient.newHazelcastClient(config);
+		//Only start a client instance if i didn't start a local one
+		if (ModuleLayer.boot()
+		               .findModule("za.co.bayport.jpms.caching")
+		               .isEmpty())
+		{
+			clientInstance = HazelcastClient.newHazelcastClient(config);
+		}
 	}
 
 	@Override
