@@ -1,24 +1,14 @@
 package com.guicedee.guicedhazelcast.implementations;
 
 import com.google.inject.Provider;
-import com.guicedee.guicedhazelcast.HazelcastProperties;
-import com.guicedee.guicedhazelcast.services.HazelcastClientPreStartup;
-import com.guicedee.guicedhazelcast.services.HazelcastPreStartup;
-import com.guicedee.guicedhazelcast.services.IGuicedHazelcastClientConfig;
-import com.guicedee.guicedinjection.GuiceContext;
+import com.google.inject.ProvisionException;
 import com.guicedee.guicedinjection.interfaces.IGuicePreDestroy;
-import com.guicedee.logger.LogFactory;
 import com.hazelcast.client.HazelcastClient;
-import com.hazelcast.client.config.ClientConfig;
-import com.hazelcast.client.config.ClientNetworkConfig;
+import com.hazelcast.config.InvalidConfigurationException;
 import com.hazelcast.core.HazelcastInstance;
+import org.apache.commons.lang3.RandomUtils;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.ServiceLoader;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Random;
 
 import static com.guicedee.guicedhazelcast.services.HazelcastClientPreStartup.*;
 
@@ -29,6 +19,20 @@ public class HazelcastClientProvider
 	@Override
 	public HazelcastInstance get()
 	{
+		//Only start a client instance if i didn't start a local one
+		if (ModuleLayer.boot()
+		               .findModule("za.co.bayport.jpms.caching")
+		               .isEmpty())
+		{
+			try
+			{
+				clientInstance = HazelcastClient.newHazelcastClient(config);
+			}catch (ProvisionException | InvalidConfigurationException pe)
+			{
+				config.setInstanceName(config.getInstanceName() + "_" + RandomUtils.nextInt(1, 100));
+				clientInstance = HazelcastClient.newHazelcastClient(config);
+			}
+		}
 		return clientInstance;
 	}
 

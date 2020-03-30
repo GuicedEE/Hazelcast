@@ -91,13 +91,6 @@ public class HazelcastClientPreStartup
 		}
 		System.setProperty("group.name", config.getClusterName());
 		System.setProperty("cluster.name", config.getClusterName());
-		//Only start a client instance if i didn't start a local one
-		if (ModuleLayer.boot()
-		               .findModule("za.co.bayport.jpms.caching")
-		               .isEmpty())
-		{
-			clientInstance = HazelcastClient.newHazelcastClient(config);
-		}
 	}
 
 	@Override
