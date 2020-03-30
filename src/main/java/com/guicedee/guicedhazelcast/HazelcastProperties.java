@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static com.guicedee.guicedhazelcast.services.HazelcastClientPreStartup.*;
 
@@ -16,6 +18,7 @@ import static com.guicedee.guicedhazelcast.services.HazelcastClientPreStartup.*;
 public class HazelcastProperties
 		implements IPropertiesEntityManagerReader
 {
+	private static final Logger log = LogFactory.getLog(HazelcastProperties.class);
 	/**
 	 * The property to enable native client mode (this client mode)
 	 */
@@ -204,7 +207,21 @@ public class HazelcastProperties
 			props.put("hibernate.cache.hazelcast.instance_name",clientInstance.getName());
 		}
 
+		waitItOut();
 		return props;
+	}
+
+	public synchronized void waitItOut()
+	{
+		//Courtesy flush and wait
+		try
+		{
+			wait(100);
+		}
+		catch (Exception e)
+		{
+			log.log(Level.SEVERE, "Unable to wait for some reason", e);
+		}
 	}
 
 	public static boolean isStartLocal()
