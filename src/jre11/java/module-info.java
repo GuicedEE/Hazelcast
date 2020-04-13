@@ -6,7 +6,6 @@ module com.guicedee.guicedhazelcast {
 	exports com.guicedee.guicedhazelcast;
 	exports com.guicedee.guicedhazelcast.services;
 
-
 	requires cache.annotations.ri.guice;
 	requires java.logging;
 	requires org.hibernate.orm.jcache;
@@ -15,9 +14,6 @@ module com.guicedee.guicedhazelcast {
 	requires transitive com.guicedee.guicedpersistence;
 	requires transitive org.apache.commons.io;
 	requires transitive com.guicedee.guicedpersistence.readers.hibernateproperties;
-
-
-
 
 	uses com.guicedee.guicedhazelcast.services.IGuicedHazelcastClientConfig;
 	uses com.guicedee.guicedhazelcast.services.IGuicedHazelcastServerConfig;
