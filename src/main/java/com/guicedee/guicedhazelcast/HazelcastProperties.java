@@ -1,50 +1,40 @@
 package com.guicedee.guicedhazelcast;
 
-import com.guicedee.guicedhazelcast.services.HazelcastClientPreStartup;
-import com.guicedee.guicedpersistence.services.IPropertiesEntityManagerReader;
 import com.guicedee.logger.LogFactory;
-import com.oracle.jaxb21.PersistenceUnit;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-import java.util.UUID;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import static com.guicedee.guicedhazelcast.services.HazelcastClientPreStartup.*;
 
 @SuppressWarnings("unused")
 public class HazelcastProperties
-		implements IPropertiesEntityManagerReader
+
 {
-	private static final Logger log = LogFactory.getLog(HazelcastProperties.class);
 	/**
 	 * The property to enable native client mode (this client mode)
 	 */
-	private static final String HazelcastNativeClientProperty = "hibernate.cache.hazelcast.use_native_client";
-
+	public static final String HazelcastNativeClientProperty = "hibernate.cache.hazelcast.use_native_client";
+	private static final Logger log = LogFactory.getLog(HazelcastProperties.class);
 	/**
 	 * The specific region name to apply the configuration to
 	 */
-	private static String regionName;
+	public static String regionName;
 	/**
 	 * If the local region factory must be used
 	 */
-	private static boolean useLocalRegionFactory;
+	public static boolean useLocalRegionFactory;
 
 	/**
 	 * The given address to contact Hazelcast
 	 */
-	private static String address;
+	public static String address;
 	/**
 	 * The given group name to contact Hazelcast
 	 */
-	private static String groupName;
+	public static String groupName;
 	/**
 	 * The instance for hazelcast
 	 */
-	private static String instanceName;
+	public static String instanceName;
+	public static boolean startLocal;
 
 	/**
 	 * The specific region name to apply the configuration to
@@ -64,26 +54,6 @@ public class HazelcastProperties
 	public static void setRegionName(String regionName)
 	{
 		HazelcastProperties.regionName = regionName;
-	}
-
-	/**
-	 * If the local region factory must be used
-	 *
-	 * @return
-	 */
-	public static boolean isUseLocalRegionFactory()
-	{
-		return HazelcastProperties.useLocalRegionFactory;
-	}
-
-	/**
-	 * If the local region factory must be used
-	 *
-	 * @param useLocalRegionFactory
-	 */
-	public static void setUseLocalRegionFactory(boolean useLocalRegionFactory)
-	{
-		HazelcastProperties.useLocalRegionFactory = useLocalRegionFactory;
 	}
 
 	/**
@@ -126,6 +96,16 @@ public class HazelcastProperties
 		HazelcastProperties.groupName = groupName;
 	}
 
+	public static boolean isStartLocal()
+	{
+		return startLocal;
+	}
+
+	public static void setStartLocal(boolean startLocal)
+	{
+		HazelcastProperties.startLocal = startLocal;
+	}
+
 	/**
 	 * The instance for hazelcast
 	 *
@@ -146,91 +126,23 @@ public class HazelcastProperties
 		HazelcastProperties.instanceName = instanceName;
 	}
 
-	private static boolean startLocal;
-
-	@Override
-	public Map<String, String> processProperties(PersistenceUnit persistenceUnit, Properties incomingProperties)
+	/**
+	 * If the local region factory must be used
+	 *
+	 * @return
+	 */
+	public static boolean isUseLocalRegionFactory()
 	{
-		Map<String, String> props = new HashMap<>();
-
-		props.put("hibernate.cache.region.factory_class", "org.hibernate.cache.jcache.internal.JCacheRegionFactory");
-		props.put("hibernate.javax.cache.provider", "com.hazelcast.client.cache.impl.HazelcastClientCachingProvider");
-
-		if (!incomingProperties.containsKey("hibernate.cache.use_second_level_cache"))
-		{
-			props.put("hibernate.cache.use_second_level_cache", "true");
-		}
-		if (!incomingProperties.containsKey("hibernate.cache.use_query_cache"))
-		{
-			props.put("hibernate.cache.use_query_cache", "true");
-		}
-		if (!incomingProperties.containsKey("hibernate.cache.use_minimal_puts"))
-		{
-			props.put("hibernate.cache.use_minimal_puts", "true");
-		}
-
-		if (HazelcastProperties.address != null)
-		{
-			props.put(HazelcastNativeClientProperty, "true");
-			props.put("hibernate.cache.hazelcast.native_client_hosts", HazelcastProperties.address);
-			props.put("hibernate.cache.hazelcast.native_client_address", HazelcastProperties.address);
-		}
-		if (HazelcastProperties.groupName != null)
-		{
-			props.put(HazelcastNativeClientProperty, "true");
-			props.put("hibernate.cache.hazelcast.native_client_group", HazelcastProperties.groupName);
-			props.put("hibernate.cache.hazelcast.native_client_cluster", HazelcastProperties.groupName);
-			props.put("hibernate.cache.hazelcast.native_client_cluster_name", HazelcastProperties.groupName);
-		}
-
-		if (HazelcastProperties.instanceName != null)
-		{
-			props.put(HazelcastNativeClientProperty, "true");
-			props.put("hibernate.cache.hazelcast.instance_name", HazelcastProperties.getInstanceName());
-		}
-
-		if (HazelcastProperties.regionName != null)
-		{
-			props.put("hibernate.cache.region_prefix", HazelcastProperties.regionName);
-			if (HazelcastProperties.isUseLocalRegionFactory())
-			{
-				props.put("hibernate.cache.region.factory_class", "com.hazelcast.hibernate.HazelcastLocalCacheRegionFactory");
-			}
-			else
-			{
-				props.put("hibernate.cache.region.factory_class", "com.hazelcast.hibernate.HazelcastCacheRegionFactory");
-			}
-		}
-
-		if (clientInstance != null)
-		{
-			props.put("hibernate.cache.hazelcast.instance_name",clientInstance.getName());
-		}
-
-		waitItOut();
-		return props;
+		return HazelcastProperties.useLocalRegionFactory;
 	}
 
-	public synchronized void waitItOut()
+	/**
+	 * If the local region factory must be used
+	 *
+	 * @param useLocalRegionFactory
+	 */
+	public static void setUseLocalRegionFactory(boolean useLocalRegionFactory)
 	{
-		//Courtesy flush and wait
-		try
-		{
-			wait(100);
-		}
-		catch (Exception e)
-		{
-			log.log(Level.SEVERE, "Unable to wait for some reason", e);
-		}
-	}
-
-	public static boolean isStartLocal()
-	{
-		return startLocal;
-	}
-
-	public static void setStartLocal(boolean startLocal)
-	{
-		HazelcastProperties.startLocal = startLocal;
+		HazelcastProperties.useLocalRegionFactory = useLocalRegionFactory;
 	}
 }

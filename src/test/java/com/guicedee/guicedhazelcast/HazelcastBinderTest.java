@@ -1,5 +1,6 @@
 package com.guicedee.guicedhazelcast;
 
+import com.guicedee.guicedhazelcast.services.HazelcastPreStartup;
 import com.guicedee.guicedinjection.GuiceContext;
 import com.guicedee.logger.LogFactory;
 import com.guicedee.logger.logging.LogColourFormatter;
@@ -25,7 +26,7 @@ public class HazelcastBinderTest
 		LogFactory.configureConsoleColourOutput(Level.FINE);
 		LogColourFormatter.setRenderBlack(false);
 
-		HazelcastProperties.setStartLocal(true);
+		HazelcastPreStartup.setStartLocal(true);
 
 		HazelcastBinderTest c = GuiceContext.get(HazelcastBinderTest.class);
 		test = c;

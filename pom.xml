@@ -21,19 +21,6 @@
     <dependencies>
 
         <dependency>
-            <groupId>com.guicedee.persistence</groupId>
-            <artifactId>guiced-persistence-btm</artifactId>
-            <scope>test</scope>
-            <type>jar</type>
-        </dependency>
-
-        <dependency>
-            <groupId>com.guicedee.services</groupId>
-            <artifactId>hibernate-jcache</artifactId>
-            <type>jar</type>
-        </dependency>
-
-        <dependency>
             <groupId>com.guicedee.services</groupId>
             <artifactId>cache-annotations-ri-guice</artifactId>
             <type>jar</type>
@@ -59,10 +46,9 @@
         </dependency>
 
         <dependency>
-            <groupId>com.guicedee.persistence</groupId>
-            <artifactId>guiced-persistence-hibernateproperties-reader</artifactId>
+            <groupId>com.guicedee</groupId>
+            <artifactId>guiced-injection</artifactId>
         </dependency>
-
 
     </dependencies>
 

@@ -1,24 +1,17 @@
 package com.guicedee.guicedhazelcast.services;
 
-import com.guicedee.guicedhazelcast.HazelcastProperties;
 import com.guicedee.guicedinjection.GuiceContext;
 import com.guicedee.guicedinjection.interfaces.IGuicePreDestroy;
 import com.guicedee.guicedinjection.interfaces.IGuicePreStartup;
 import com.guicedee.logger.LogFactory;
-import com.hazelcast.client.Client;
-import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.client.config.ClientNetworkConfig;
-import com.hazelcast.config.Config;
-import com.hazelcast.config.NetworkConfig;
-import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ServiceLoader;
 import java.util.Set;
-import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,11 +19,11 @@ public class HazelcastClientPreStartup
 		implements IGuicePreStartup<HazelcastClientPreStartup>, IGuicePreDestroy<HazelcastClientPreStartup>
 {
 
+	private static final Logger log = LogFactory.getLog("HazelcastPreStartup");
 	public static HazelcastInstance clientInstance;
 	public static ClientConfig config;
 
-	private static final Logger log = LogFactory.getLog("HazelcastPreStartup");
-
+	@Override
 	public void onStartup()
 	{
 		if (clientInstance != null)
@@ -94,6 +87,12 @@ public class HazelcastClientPreStartup
 	}
 
 	@Override
+	public Integer sortOrder()
+	{
+		return 46;
+	}
+
+	@Override
 	public void onDestroy()
 	{
 		if (clientInstance != null)
@@ -101,11 +100,5 @@ public class HazelcastClientPreStartup
 			clientInstance.shutdown();
 			clientInstance = null;
 		}
-	}
-
-	@Override
-	public Integer sortOrder()
-	{
-		return 46;
 	}
 }
