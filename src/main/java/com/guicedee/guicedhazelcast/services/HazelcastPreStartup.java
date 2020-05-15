@@ -13,6 +13,8 @@ import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import static com.guicedee.guicedhazelcast.HazelcastProperties.*;
+
 public class HazelcastPreStartup
 		implements IGuicePreStartup<HazelcastPreStartup>, IGuicePreDestroy<HazelcastPreStartup>
 {
@@ -20,8 +22,6 @@ public class HazelcastPreStartup
 	private static final Logger log = LogFactory.getLog("HazelcastPreStartup");
 	public static HazelcastInstance instance;
 	public static Config config;
-
-	private static boolean startLocal;
 
 	@Override
 	public void onStartup()
@@ -54,16 +54,6 @@ public class HazelcastPreStartup
 	public Integer sortOrder()
 	{
 		return 45;
-	}
-
-	public static boolean isStartLocal()
-	{
-		return startLocal;
-	}
-
-	public static void setStartLocal(boolean startLocal)
-	{
-		HazelcastPreStartup.startLocal = startLocal;
 	}
 
 	@Override
