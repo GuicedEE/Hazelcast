@@ -86,6 +86,7 @@ public class HazelcastClientPreStartup
 		System.setProperty("group.name", config.getClusterName());
 		System.setProperty("cluster.name", config.getClusterName());
 
+		config.setInstanceName(config.getInstanceName() + Math.random());
 		clientInstance = HazelcastClient.getOrCreateHazelcastClient(config);
 	}
 
