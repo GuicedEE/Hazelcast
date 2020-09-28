@@ -88,6 +88,7 @@ public class HazelcastClientPreStartup
 
 		config.setInstanceName(config.getInstanceName() + Math.random());
 		clientInstance = HazelcastClient.getOrCreateHazelcastClient(config);
+		
 	}
 
 	@Override
