@@ -9,9 +9,9 @@ import com.hazelcast.client.cache.impl.HazelcastClientCachingProvider;
 import com.hazelcast.core.HazelcastInstance;
 import org.jsr107.ri.annotations.guice.module.CacheAnnotationsModule;
 
-import javax.cache.CacheManager;
-import javax.cache.Caching;
-import javax.cache.spi.CachingProvider;
+import jakarta.cache.CacheManager;
+import jakarta.cache.Caching;
+import jakarta.cache.spi.CachingProvider;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;

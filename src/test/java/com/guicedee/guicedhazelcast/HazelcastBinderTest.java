@@ -6,8 +6,8 @@ import com.guicedee.logger.logging.LogColourFormatter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import javax.cache.annotation.CacheKey;
-import javax.cache.annotation.CacheResult;
+import jakarta.cache.annotation.CacheKey;
+import jakarta.cache.annotation.CacheResult;
 import java.util.logging.Level;
 
 import static org.junit.jupiter.api.Assertions.*;
