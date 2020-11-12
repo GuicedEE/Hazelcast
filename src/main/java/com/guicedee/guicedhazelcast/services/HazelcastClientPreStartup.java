@@ -86,6 +86,8 @@ public class HazelcastClientPreStartup
 		System.setProperty("group.name", config.getClusterName());
 		System.setProperty("cluster.name", config.getClusterName());
 
+		System.setProperty("hazelcast.jcache.provider.type", "client");
+
 		//TODO this requires more than a blind code implmementation
 		//config.setInstanceName(config.getInstanceName() + Math.random());
 		//clientInstance = HazelcastClient.getOrCreateHazelcastClient(config);
