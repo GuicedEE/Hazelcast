@@ -4,6 +4,8 @@ module com.guicedee.guicedhazelcast {
 
 	requires cache.annotations.ri.guice;
 
+	requires java.xml;
+
 	requires transitive com.hazelcast.all;
 	requires transitive org.apache.commons.io;
 
