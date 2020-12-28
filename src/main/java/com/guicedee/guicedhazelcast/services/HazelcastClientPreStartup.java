@@ -1,5 +1,7 @@
 package com.guicedee.guicedhazelcast.services;
 
+import com.google.common.base.Strings;
+import com.guicedee.guicedhazelcast.HazelcastProperties;
 import com.guicedee.guicedinjection.GuiceContext;
 import com.guicedee.guicedinjection.interfaces.IGuicePreDestroy;
 import com.guicedee.guicedinjection.interfaces.IGuicePreStartup;
@@ -42,7 +44,13 @@ public class HazelcastClientPreStartup
 		config.setProperty("hazelcast.client.event.thread.count", "5");
 		config.setProperty("hazelcast.client.event.queue.capacity", "1000000");
 		config.setProperty("hazelcast.client.invocation.timeout.seconds", "120");
-
+		
+		if (Strings.isNullOrEmpty(HazelcastProperties.getAddress()))
+		{
+			HazelcastProperties.setAddress("127.0.0.1");
+			HazelcastProperties.setStartLocal(true);
+		}
+		
 		@SuppressWarnings("rawtypes")
 		Set<IGuicedHazelcastClientConfig> configSet = GuiceContext.instance()
 		                                                          .getLoader(IGuicedHazelcastClientConfig.class, true, ServiceLoader.load(IGuicedHazelcastClientConfig.class));
@@ -60,7 +68,16 @@ public class HazelcastClientPreStartup
 		{
 			log.log(Level.SEVERE, "Unable to make an inet address from localhost", e);
 		}
-
+		
+		if (Strings.isNullOrEmpty(config.getClusterName()))
+		{
+			config.setClusterName("dev");
+		}
+		if (Strings.isNullOrEmpty(config.getInstanceName()))
+		{
+			config.setInstanceName("dev");
+		}
+	
 		ClientNetworkConfig clientNetworkConfig = new ClientNetworkConfig();
 		System.getProperties()
 		      .setProperty("system.hazelcast.groupname", config.getClusterName());
@@ -82,6 +99,11 @@ public class HazelcastClientPreStartup
 			System.getProperties()
 			      .setProperty("system.hazelcast.address", addy);
 			System.setProperty("client.address", addy);
+		}
+		else
+		{
+			System.getProperties()
+			      .setProperty("system.hazelcast.address", "127.0.0.1");
 		}
 		System.setProperty("group.name", config.getClusterName());
 		System.setProperty("cluster.name", config.getClusterName());
