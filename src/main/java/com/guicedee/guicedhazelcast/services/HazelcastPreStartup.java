@@ -26,6 +26,7 @@ public class HazelcastPreStartup
 	@Override
 	public void onStartup()
 	{
+		
 		if (config == null)
 		{
 			config = new Config();
