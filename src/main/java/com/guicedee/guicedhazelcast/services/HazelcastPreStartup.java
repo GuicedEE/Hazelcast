@@ -36,19 +36,18 @@ public class HazelcastPreStartup
 		{
 			config.setNetworkConfig(new NetworkConfig());
 		}
-
+		@SuppressWarnings("rawtypes")
+		Set<IGuicedHazelcastServerConfig> configSet = GuiceContext.instance()
+		                                                          .getLoader(IGuicedHazelcastServerConfig.class, true, ServiceLoader.load(IGuicedHazelcastServerConfig.class));
+		for (IGuicedHazelcastServerConfig<?> iGuicedHazelcastClientConfig : configSet)
+		{
+			config = iGuicedHazelcastClientConfig.buildConfig(config);
+		}
+		
 		if (isStartLocal())
 		{
 			config.getNetworkConfig().getJoin().getMulticastConfig().setEnabled(false);
 			config.getNetworkConfig().getJoin().getAutoDetectionConfig().setEnabled(false);
-
-			@SuppressWarnings("rawtypes")
-			Set<IGuicedHazelcastServerConfig> configSet = GuiceContext.instance()
-			                                                          .getLoader(IGuicedHazelcastServerConfig.class, true, ServiceLoader.load(IGuicedHazelcastServerConfig.class));
-			for (IGuicedHazelcastServerConfig<?> iGuicedHazelcastClientConfig : configSet)
-			{
-				config = iGuicedHazelcastClientConfig.buildConfig(config);
-			}
 			System.setProperty("hazelcast.jcache.provider.type", "member");
 			log.config("Final Hazelcast Server Configuration - " + config.toString());
 			instance = Hazelcast.newHazelcastInstance(config);

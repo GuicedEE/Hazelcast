@@ -38,6 +38,11 @@
 
         <dependency>
             <groupId>com.guicedee.services</groupId>
+            <artifactId>hazelcast-hibernate</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.guicedee.services</groupId>
             <artifactId>commons-io</artifactId>
         </dependency>
 
