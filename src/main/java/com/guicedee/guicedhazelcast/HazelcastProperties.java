@@ -29,7 +29,7 @@ public class HazelcastProperties
 	/**
 	 * The given group name to contact Hazelcast
 	 */
-	public static String groupName;
+	public static String groupName = "dev";
 	/**
 	 * The instance for hazelcast
 	 */

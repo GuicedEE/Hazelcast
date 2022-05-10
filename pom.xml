@@ -31,18 +31,7 @@
 
         <dependency>
             <groupId>com.guicedee.services</groupId>
-            <artifactId>h2</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.guicedee.services</groupId>
             <artifactId>hazelcast-all</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.guicedee.services</groupId>
-            <artifactId>hazelcast-hibernate</artifactId>
         </dependency>
 
         <dependency>

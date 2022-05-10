@@ -79,12 +79,6 @@ public class HazelcastClientPreStartup
 		}
 	
 		ClientNetworkConfig clientNetworkConfig = new ClientNetworkConfig();
-		System.getProperties()
-		      .setProperty("system.hazelcast.groupname", config.getClusterName());
-		System.getProperties()
-		      .setProperty("system.hazelcast.clustername", config.getClusterName());
-		System.getProperties()
-		      .setProperty("system.hazelcast.cluster_name", config.getClusterName());
 		if (config.getNetworkConfig() != null && config.getNetworkConfig()
 		                                               .getAddresses() != null && !config.getNetworkConfig()
 		                                                                                 .getAddresses()
@@ -105,9 +99,18 @@ public class HazelcastClientPreStartup
 			System.getProperties()
 			      .setProperty("system.hazelcast.address", "127.0.0.1");
 		}
-		System.setProperty("group.name", config.getClusterName());
-		System.setProperty("cluster.name", config.getClusterName());
-		System.setProperty("instance.name", config.getInstanceName());
+		if(!Strings.isNullOrEmpty(config.getClusterName()))
+		{
+			System.setProperty("group.name", config.getClusterName());
+			System.setProperty("cluster.name", config.getClusterName());
+			System.setProperty("instance.name", config.getInstanceName());
+			System.getProperties()
+			      .setProperty("system.hazelcast.groupname", config.getClusterName());
+			System.getProperties()
+			      .setProperty("system.hazelcast.clustername", config.getClusterName());
+			System.getProperties()
+			      .setProperty("system.hazelcast.cluster_name", config.getClusterName());
+		}
 
 		System.setProperty("hazelcast.jcache.provider.type", "client");
 
