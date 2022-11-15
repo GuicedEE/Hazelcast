@@ -5,6 +5,7 @@ import com.guicedee.guicedhazelcast.HazelcastProperties;
 import com.guicedee.guicedinjection.GuiceContext;
 import com.guicedee.guicedinjection.interfaces.IGuicePreDestroy;
 import com.guicedee.guicedinjection.interfaces.IGuicePreStartup;
+import com.guicedee.guicedinjection.properties.*;
 import com.guicedee.logger.LogFactory;
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
@@ -13,19 +14,18 @@ import com.hazelcast.core.HazelcastInstance;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.ServiceLoader;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class HazelcastClientPreStartup
 		implements IGuicePreStartup<HazelcastClientPreStartup>, IGuicePreDestroy<HazelcastClientPreStartup>
 {
-
+	
 	private static final Logger log = LogFactory.getLog("HazelcastPreStartup");
 	public static HazelcastInstance clientInstance;
 	public static ClientConfig config;
-
+	
 	@Override
 	public void onStartup()
 	{
@@ -37,7 +37,7 @@ public class HazelcastClientPreStartup
 		{
 			config = new ClientConfig();
 		}
-
+		
 		config.setProperty("hazelcast.client.shuffle.member.list", "true");
 		config.setProperty("hazelcast.client.heartbeat.timeout", "60000");
 		config.setProperty("hazelcast.client.heartbeat.interval", "5000");
@@ -45,11 +45,15 @@ public class HazelcastClientPreStartup
 		config.setProperty("hazelcast.client.event.queue.capacity", "1000000");
 		config.setProperty("hazelcast.client.invocation.timeout.seconds", "120");
 		
-		if (Strings.isNullOrEmpty(HazelcastProperties.getAddress()))
-		{
-			HazelcastProperties.setAddress("127.0.0.1");
-			HazelcastProperties.setStartLocal(true);
-		}
+		GlobalProperties.getSystemPropertyOrEnvironment("CLIENT_ADDRESS", "localhost");
+		HazelcastProperties.setAddress(System.getProperty("CLIENT_ADDRESS"));
+		config.getNetworkConfig().addAddress(HazelcastProperties.getAddress());
+		
+		GlobalProperties.getSystemPropertyOrEnvironment("GROUP_NAME", "dev");
+		HazelcastProperties.setGroupName(System.getProperty("GROUP_NAME"));
+		
+		config.setClusterName(HazelcastProperties.getGroupName());
+		config.setInstanceName(HazelcastProperties.getGroupName());
 		
 		@SuppressWarnings("rawtypes")
 		Set<IGuicedHazelcastClientConfig> configSet = GuiceContext.instance()
@@ -77,7 +81,7 @@ public class HazelcastClientPreStartup
 		{
 			config.setInstanceName("dev");
 		}
-	
+		
 		ClientNetworkConfig clientNetworkConfig = new ClientNetworkConfig();
 		if (config.getNetworkConfig() != null && config.getNetworkConfig()
 		                                               .getAddresses() != null && !config.getNetworkConfig()
@@ -88,44 +92,38 @@ public class HazelcastClientPreStartup
 			                    .getAddresses()
 			                    .get(0);
 			clientNetworkConfig.addAddress(addy);
-			System.getProperties()
-			      .setProperty("hazelcast.socket.client.bind", addy);
-			System.getProperties()
-			      .setProperty("system.hazelcast.address", addy);
-			System.setProperty("client.address", addy);
+			GlobalProperties.getSystemPropertyOrEnvironment("hazelcast.socket.client.bind", addy);
+			GlobalProperties.getSystemPropertyOrEnvironment("system.hazelcast.address", addy);
+			GlobalProperties.getSystemPropertyOrEnvironment("CLIENT_ADDRESS", addy);
 		}
 		else
 		{
 			System.getProperties()
 			      .setProperty("system.hazelcast.address", "127.0.0.1");
 		}
-		if(!Strings.isNullOrEmpty(config.getClusterName()))
+		if (!Strings.isNullOrEmpty(config.getClusterName()))
 		{
-			System.setProperty("group.name", config.getClusterName());
-			System.setProperty("cluster.name", config.getClusterName());
-			System.setProperty("instance.name", config.getInstanceName());
-			System.getProperties()
-			      .setProperty("system.hazelcast.groupname", config.getClusterName());
-			System.getProperties()
-			      .setProperty("system.hazelcast.clustername", config.getClusterName());
-			System.getProperties()
-			      .setProperty("system.hazelcast.cluster_name", config.getClusterName());
+			GlobalProperties.getSystemPropertyOrEnvironment("GROUP_NAME", config.getClusterName());
+			GlobalProperties.getSystemPropertyOrEnvironment("cluster.name", config.getClusterName());
+			GlobalProperties.getSystemPropertyOrEnvironment("instance.name", config.getInstanceName());
+			GlobalProperties.getSystemPropertyOrEnvironment("system.hazelcast.groupname", config.getClusterName());
+			GlobalProperties.getSystemPropertyOrEnvironment("system.hazelcast.clustername", config.getClusterName());
+			GlobalProperties.getSystemPropertyOrEnvironment("system.hazelcast.cluster_name", config.getClusterName());
 		}
-
-		System.setProperty("hazelcast.jcache.provider.type", "client");
-
+		GlobalProperties.getSystemPropertyOrEnvironment("hazelcast.jcache.provider.type", "client");
+		
 		//TODO this requires more than a blind code implmementation
 		config.setInstanceName(config.getInstanceName());
 		clientInstance = HazelcastClient.getOrCreateHazelcastClient(config);
 		
 	}
-
+	
 	@Override
 	public Integer sortOrder()
 	{
 		return 46;
 	}
-
+	
 	@Override
 	public void onDestroy()
 	{

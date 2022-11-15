@@ -3,11 +3,11 @@
                   xsi:schemaLocation="http://www.hazelcast.com/schema/client-config
                   http://www.hazelcast.com/schema/client-config/hazelcast-client-config-5.1.xsd">
 
-    <cluster-name>${group.name}</cluster-name>
+    <cluster-name>${GROUP_NAME}</cluster-name>
 
     <network>
         <cluster-members>
-            <address>${client.address}</address>
+            <address>${CLIENT_ADDRESS}</address>
         </cluster-members>
     </network>
 
