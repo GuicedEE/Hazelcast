@@ -39,13 +39,10 @@ public class HazelcastPreStartup
 		{
 			config.setNetworkConfig(new NetworkConfig());
 		}
-		GlobalProperties.getSystemPropertyOrEnvironment("CLIENT_ADDRESS", "localhost");
-		HazelcastProperties.setAddress(System.getProperty("CLIENT_ADDRESS"));
+		HazelcastProperties.setAddress(GlobalProperties.getSystemPropertyOrEnvironment("CLIENT_ADDRESS", "localhost"));
 		config.getNetworkConfig()
 		      .setPublicAddress(HazelcastProperties.getAddress());
-		
-		GlobalProperties.getSystemPropertyOrEnvironment("GROUP_NAME", "dev");
-		HazelcastProperties.setGroupName(System.getProperty("GROUP_NAME"));
+		HazelcastProperties.setGroupName(GlobalProperties.getSystemPropertyOrEnvironment("GROUP_NAME", "dev"));
 		config.setClusterName(HazelcastProperties.getGroupName());
 		config.setInstanceName(HazelcastProperties.getGroupName());
 		

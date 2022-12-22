@@ -44,13 +44,9 @@ public class HazelcastClientPreStartup
 		config.setProperty("hazelcast.client.event.thread.count", "5");
 		config.setProperty("hazelcast.client.event.queue.capacity", "1000000");
 		config.setProperty("hazelcast.client.invocation.timeout.seconds", "120");
-		
-		GlobalProperties.getSystemPropertyOrEnvironment("CLIENT_ADDRESS", "localhost");
-		HazelcastProperties.setAddress(System.getProperty("CLIENT_ADDRESS"));
+		HazelcastProperties.setAddress(GlobalProperties.getSystemPropertyOrEnvironment("CLIENT_ADDRESS", "localhost"));
 		config.getNetworkConfig().addAddress(HazelcastProperties.getAddress());
-		
-		GlobalProperties.getSystemPropertyOrEnvironment("GROUP_NAME", "dev");
-		HazelcastProperties.setGroupName(System.getProperty("GROUP_NAME"));
+		HazelcastProperties.setGroupName(GlobalProperties.getSystemPropertyOrEnvironment("GROUP_NAME", "dev"));
 		
 		config.setClusterName(HazelcastProperties.getGroupName());
 		config.setInstanceName(HazelcastProperties.getGroupName());
