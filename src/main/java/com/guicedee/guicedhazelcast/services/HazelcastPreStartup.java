@@ -53,9 +53,9 @@ public class HazelcastPreStartup
 		
 		if (isStartLocal())
 		{
+			log.fine("Setting hazelcast to local instance startup. Disabling auto detection and multi cast pickup");
 			config.getNetworkConfig().getJoin().getMulticastConfig().setEnabled(false);
 			config.getNetworkConfig().getJoin().getAutoDetectionConfig().setEnabled(false);
-			GlobalProperties.getSystemPropertyOrEnvironment("hazelcast.jcache.provider.type", "client");
 			log.config("Final Hazelcast Server Configuration - " + config.toString());
 			instance = Hazelcast.getOrCreateHazelcastInstance(config);
 		}

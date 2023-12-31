@@ -8,6 +8,6 @@ module guiced.hazelcast.tests {
 	requires org.slf4j.simple;
 	
 	
-	opens com.guicedee.guicedhazelcast.tests to org.junit.platform.commons;
+	opens com.guicedee.guicedhazelcast.tests to org.junit.platform.commons,com.google.guice;
 	
 }
