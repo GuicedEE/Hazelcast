@@ -1,28 +1,25 @@
 package com.guicedee.guicedhazelcast.services;
 
-import com.guicedee.guicedhazelcast.*;
+import com.guicedee.guicedhazelcast.HazelcastProperties;
 import com.guicedee.guicedinjection.GuiceContext;
 import com.guicedee.guicedinjection.interfaces.IGuicePreDestroy;
 import com.guicedee.guicedinjection.interfaces.IGuicePreStartup;
-import com.guicedee.guicedinjection.properties.*;
-import com.guicedee.logger.LogFactory;
+import com.guicedee.guicedinjection.properties.GlobalProperties;
 import com.hazelcast.config.Config;
 import com.hazelcast.config.NetworkConfig;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
-import jakarta.cache.*;
-import jakarta.cache.spi.*;
+import lombok.extern.java.Log;
 
-import java.util.*;
-import java.util.logging.Logger;
+import java.util.ServiceLoader;
+import java.util.Set;
 
-import static com.guicedee.guicedhazelcast.HazelcastProperties.*;
+import static com.guicedee.guicedhazelcast.HazelcastProperties.isStartLocal;
 
+@Log
 public class HazelcastPreStartup
 		implements IGuicePreStartup<HazelcastPreStartup>, IGuicePreDestroy<HazelcastPreStartup>
 {
-
-	private static final Logger log = LogFactory.getLog("HazelcastPreStartup");
 	public static HazelcastInstance instance;
 	public static Config config;
 

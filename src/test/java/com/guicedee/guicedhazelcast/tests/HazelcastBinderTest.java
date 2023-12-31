@@ -1,16 +1,15 @@
-package com.guicedee.guicedhazelcast;
+package com.guicedee.guicedhazelcast.tests;
 
+import com.guicedee.guicedhazelcast.HazelcastProperties;
+import com.guicedee.guicedhazelcast.services.HazelcastClientPreStartup;
+import com.guicedee.guicedhazelcast.services.HazelcastPreStartup;
 import com.guicedee.guicedinjection.GuiceContext;
-import com.guicedee.logger.LogFactory;
-import com.guicedee.logger.logging.LogColourFormatter;
+import jakarta.cache.annotation.CacheKey;
+import jakarta.cache.annotation.CacheResult;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import jakarta.cache.annotation.CacheKey;
-import jakarta.cache.annotation.CacheResult;
-import java.util.logging.Level;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class HazelcastBinderTest
 {
@@ -22,11 +21,10 @@ public class HazelcastBinderTest
 	@Test
 	public void testCaching()
 	{
-		LogFactory.configureConsoleColourOutput(Level.FINE);
-		LogColourFormatter.setRenderBlack(false);
-
 		HazelcastProperties.setStartLocal(true);
-
+		
+		System.setProperty("GROUP_NAME", "test");
+		
 		HazelcastBinderTest c = GuiceContext.get(HazelcastBinderTest.class);
 		test = c;
 		System.out.println(test.test("1"));
