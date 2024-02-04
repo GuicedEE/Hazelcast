@@ -4,8 +4,8 @@ import com.guicedee.guicedhazelcast.HazelcastProperties;
 import com.guicedee.guicedhazelcast.services.HazelcastClientPreStartup;
 import com.guicedee.guicedhazelcast.services.HazelcastPreStartup;
 import com.guicedee.guicedinjection.GuiceContext;
-import jakarta.cache.annotation.CacheKey;
-import jakarta.cache.annotation.CacheResult;
+import javax.cache.annotation.CacheKey;
+import javax.cache.annotation.CacheResult;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

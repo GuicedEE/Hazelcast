@@ -5,9 +5,9 @@ import com.google.inject.Singleton;
 import com.guicedee.guicedinjection.GuiceContext;
 import com.guicedee.guicedinjection.interfaces.IGuiceModule;
 import com.hazelcast.core.HazelcastInstance;
-import jakarta.cache.CacheManager;
-import jakarta.cache.Caching;
-import jakarta.cache.spi.CachingProvider;
+import javax.cache.CacheManager;
+import javax.cache.Caching;
+import javax.cache.spi.CachingProvider;
 import lombok.extern.java.Log;
 import org.jsr107.ri.annotations.guice.module.CacheAnnotationsModule;
 
