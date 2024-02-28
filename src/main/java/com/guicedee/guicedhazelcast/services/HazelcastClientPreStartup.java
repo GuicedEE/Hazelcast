@@ -1,8 +1,8 @@
 package com.guicedee.guicedhazelcast.services;
 
 import com.google.common.base.Strings;
+import com.guicedee.client.*;
 import com.guicedee.guicedhazelcast.HazelcastProperties;
-import com.guicedee.guicedinjection.GuiceContext;
 import com.guicedee.guicedinjection.interfaces.IGuicePreDestroy;
 import com.guicedee.guicedinjection.interfaces.IGuicePreStartup;
 import com.guicedee.guicedinjection.properties.GlobalProperties;
@@ -51,8 +51,9 @@ public class HazelcastClientPreStartup
 		config.setInstanceName(HazelcastProperties.getGroupName());
 		
 		@SuppressWarnings("rawtypes")
-		Set<IGuicedHazelcastClientConfig> configSet = GuiceContext.instance()
-						.getLoader(IGuicedHazelcastClientConfig.class, true, ServiceLoader.load(IGuicedHazelcastClientConfig.class));
+		Set<IGuicedHazelcastClientConfig> configSet = IGuiceContext
+				                                              .instance()
+				                                              .getLoader(IGuicedHazelcastClientConfig.class, true, ServiceLoader.load(IGuicedHazelcastClientConfig.class));
 		for (IGuicedHazelcastClientConfig<?> iGuicedHazelcastClientConfig : configSet)
 		{
 			config = iGuicedHazelcastClientConfig.buildConfig(config);

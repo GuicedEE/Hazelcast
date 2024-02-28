@@ -50,6 +50,12 @@
         <dependency>
             <groupId>com.guicedee</groupId>
             <artifactId>guice-injection</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
         </dependency>
 
         <dependency>

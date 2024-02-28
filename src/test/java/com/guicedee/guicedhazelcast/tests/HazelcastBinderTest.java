@@ -1,9 +1,8 @@
 package com.guicedee.guicedhazelcast.tests;
 
+import com.guicedee.client.*;
 import com.guicedee.guicedhazelcast.HazelcastProperties;
-import com.guicedee.guicedhazelcast.services.HazelcastClientPreStartup;
-import com.guicedee.guicedhazelcast.services.HazelcastPreStartup;
-import com.guicedee.guicedinjection.GuiceContext;
+
 import javax.cache.annotation.CacheKey;
 import javax.cache.annotation.CacheResult;
 import org.junit.jupiter.api.Assertions;
@@ -25,7 +24,7 @@ public class HazelcastBinderTest
 		
 		System.setProperty("GROUP_NAME", "test");
 		
-		HazelcastBinderTest c = GuiceContext.get(HazelcastBinderTest.class);
+		HazelcastBinderTest c = IGuiceContext.get(HazelcastBinderTest.class);
 		test = c;
 		System.out.println(test.test("1"));
 		System.out.println(test.test("2"));

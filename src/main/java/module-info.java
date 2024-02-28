@@ -11,7 +11,8 @@ open module com.guicedee.guicedhazelcast {
 	requires transitive com.hazelcast.all;
 	requires org.apache.commons.io;
 	
-	requires transitive com.guicedee.guicedinjection;
+	requires transitive com.guicedee.client;
+	requires org.apache.commons.lang3;
 	
 	uses com.guicedee.guicedhazelcast.services.IGuicedHazelcastClientConfig;
 	uses com.guicedee.guicedhazelcast.services.IGuicedHazelcastServerConfig;

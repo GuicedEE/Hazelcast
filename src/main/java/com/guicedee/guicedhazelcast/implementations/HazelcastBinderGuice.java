@@ -2,7 +2,7 @@ package com.guicedee.guicedhazelcast.implementations;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
-import com.guicedee.guicedinjection.GuiceContext;
+import com.guicedee.client.*;
 import com.guicedee.guicedinjection.interfaces.IGuiceModule;
 import com.hazelcast.core.HazelcastInstance;
 import javax.cache.CacheManager;
@@ -32,7 +32,7 @@ public class HazelcastBinderGuice
 	 */
 	static HazelcastInstance getHzClient(HazelcastInstance hzClient)
 	{
-		return GuiceContext.get(HazelcastInstance.class);
+		return IGuiceContext.get(HazelcastInstance.class);
 	}
 	
 	@Override
