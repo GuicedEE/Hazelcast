@@ -1,10 +1,9 @@
 package com.guicedee.guicedhazelcast;
 
-import com.guicedee.logger.LogFactory;
-
-import java.util.logging.Logger;
+import lombok.extern.java.Log;
 
 @SuppressWarnings("unused")
+@Log
 public class HazelcastProperties
 
 {
@@ -12,7 +11,7 @@ public class HazelcastProperties
 	 * The property to enable native client mode (this client mode)
 	 */
 	public static final String HazelcastNativeClientProperty = "hibernate.cache.hazelcast.use_native_client";
-	private static final Logger log = LogFactory.getLog(HazelcastProperties.class);
+
 	/**
 	 * The specific region name to apply the configuration to
 	 */

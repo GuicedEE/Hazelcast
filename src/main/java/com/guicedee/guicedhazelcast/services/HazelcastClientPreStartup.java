@@ -1,28 +1,27 @@
 package com.guicedee.guicedhazelcast.services;
 
 import com.google.common.base.Strings;
+import com.guicedee.client.*;
 import com.guicedee.guicedhazelcast.HazelcastProperties;
-import com.guicedee.guicedinjection.GuiceContext;
 import com.guicedee.guicedinjection.interfaces.IGuicePreDestroy;
 import com.guicedee.guicedinjection.interfaces.IGuicePreStartup;
-import com.guicedee.guicedinjection.properties.*;
-import com.guicedee.logger.LogFactory;
+import com.guicedee.guicedinjection.properties.GlobalProperties;
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.client.config.ClientNetworkConfig;
 import com.hazelcast.core.HazelcastInstance;
+import lombok.extern.java.Log;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.*;
+import java.util.ServiceLoader;
+import java.util.Set;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
+@Log
 public class HazelcastClientPreStartup
-		implements IGuicePreStartup<HazelcastClientPreStartup>, IGuicePreDestroy<HazelcastClientPreStartup>
+				implements IGuicePreStartup<HazelcastClientPreStartup>, IGuicePreDestroy<HazelcastClientPreStartup>
 {
-	
-	private static final Logger log = LogFactory.getLog("HazelcastPreStartup");
 	public static HazelcastInstance clientInstance;
 	public static ClientConfig config;
 	
@@ -52,8 +51,9 @@ public class HazelcastClientPreStartup
 		config.setInstanceName(HazelcastProperties.getGroupName());
 		
 		@SuppressWarnings("rawtypes")
-		Set<IGuicedHazelcastClientConfig> configSet = GuiceContext.instance()
-		                                                          .getLoader(IGuicedHazelcastClientConfig.class, true, ServiceLoader.load(IGuicedHazelcastClientConfig.class));
+		Set<IGuicedHazelcastClientConfig> configSet = IGuiceContext
+				                                              .instance()
+				                                              .getLoader(IGuicedHazelcastClientConfig.class, true, ServiceLoader.load(IGuicedHazelcastClientConfig.class));
 		for (IGuicedHazelcastClientConfig<?> iGuicedHazelcastClientConfig : configSet)
 		{
 			config = iGuicedHazelcastClientConfig.buildConfig(config);
@@ -62,9 +62,8 @@ public class HazelcastClientPreStartup
 		try
 		{
 			config.addLabel(InetAddress.getLocalHost()
-			                           .getHostAddress());
-		}
-		catch (UnknownHostException e)
+							.getHostAddress());
+		} catch (UnknownHostException e)
 		{
 			log.log(Level.SEVERE, "Unable to make an inet address from localhost", e);
 		}
@@ -80,22 +79,21 @@ public class HazelcastClientPreStartup
 		
 		ClientNetworkConfig clientNetworkConfig = new ClientNetworkConfig();
 		if (config.getNetworkConfig() != null && config.getNetworkConfig()
-		                                               .getAddresses() != null && !config.getNetworkConfig()
-		                                                                                 .getAddresses()
-		                                                                                 .isEmpty())
+						.getAddresses() != null && !config.getNetworkConfig()
+						.getAddresses()
+						.isEmpty())
 		{
 			String addy = config.getNetworkConfig()
-			                    .getAddresses()
-			                    .get(0);
+							.getAddresses()
+							.get(0);
 			clientNetworkConfig.addAddress(addy);
 			GlobalProperties.getSystemPropertyOrEnvironment("hazelcast.socket.client.bind", addy);
 			GlobalProperties.getSystemPropertyOrEnvironment("system.hazelcast.address", addy);
 			GlobalProperties.getSystemPropertyOrEnvironment("CLIENT_ADDRESS", addy);
-		}
-		else
+		} else
 		{
 			System.getProperties()
-			      .setProperty("system.hazelcast.address", "127.0.0.1");
+							.setProperty("system.hazelcast.address", "127.0.0.1");
 		}
 		if (!Strings.isNullOrEmpty(config.getClusterName()))
 		{

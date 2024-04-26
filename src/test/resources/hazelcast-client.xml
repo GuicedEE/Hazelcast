@@ -1,29 +1,14 @@
 <hazelcast-client xmlns="http://www.hazelcast.com/schema/client-config"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="http://www.hazelcast.com/schema/client-config
-                  http://www.hazelcast.com/schema/client-config/hazelcast-client-config-4.2.xsd">
+                  http://www.hazelcast.com/schema/client-config/hazelcast-client-config-5.3.xsd">
 
-    <properties>
-        <property name="hazelcast.client.shuffle.member.list">true</property>
-        <property name="hazelcast.client.heartbeat.timeout">60000</property>
-        <property name="hazelcast.client.heartbeat.interval">5000</property>
-        <property name="hazelcast.client.event.thread.count">5</property>
-        <property name="hazelcast.client.event.queue.capacity">1000000</property>
-        <property name="hazelcast.client.invocation.timeout.seconds">120</property>
-    </properties>
+    <cluster-name>${GROUP_NAME}</cluster-name>
 
     <network>
-        <redo-operation>true</redo-operation>
-        <connection-timeout>60000</connection-timeout>
-
-        <socket-options>
-            <tcp-no-delay>true</tcp-no-delay>
-            <keep-alive>true</keep-alive>
-            <reuse-address>true</reuse-address>
-            <linger-seconds>3</linger-seconds>
-            <buffer-size>128</buffer-size>
-        </socket-options>
-
+        <cluster-members>
+            <address>${CLIENT_ADDRESS}</address>
+        </cluster-members>
     </network>
 
 </hazelcast-client>
