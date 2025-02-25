@@ -3,12 +3,35 @@
                   xsi:schemaLocation="http://www.hazelcast.com/schema/client-config
                   http://www.hazelcast.com/schema/client-config/hazelcast-client-config-5.5.xsd">
 
+    <!-- Cluster Configuration -->
     <cluster-name>${GROUP_NAME}</cluster-name>
 
-    <network>
+    <network >
         <cluster-members>
             <address>${CLIENT_ADDRESS}</address>
         </cluster-members>
+        <!-- Connection Timeout -->
+        <connection-timeout>5000</connection-timeout>
+        <redo-operation>true</redo-operation>
+        <!-- Smart Routing -->
+        <smart-routing>true</smart-routing>
+        <socket-interceptor enabled="false"/>
+        <socket-options>
+            <buffer-size>32</buffer-size>
+            <keep-alive>true</keep-alive>
+            <tcp-no-delay>true</tcp-no-delay>
+            <reuse-address>true</reuse-address>
+            <linger-seconds>3</linger-seconds>
+        </socket-options>
     </network>
 
+    <!-- Connection Strategy -->
+    <connection-strategy async-start="true" reconnect-mode="ASYNC" >
+        <connection-retry>
+            <initial-backoff-millis>1000</initial-backoff-millis>
+            <max-backoff-millis>30000</max-backoff-millis>
+            <multiplier>1.5</multiplier>
+            <jitter>0.2</jitter>
+        </connection-retry>
+    </connection-strategy>
 </hazelcast-client>
