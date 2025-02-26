@@ -29,7 +29,7 @@
     <connection-strategy async-start="true" reconnect-mode="ASYNC" >
         <connection-retry>
             <initial-backoff-millis>1000</initial-backoff-millis>
-            <max-backoff-millis>30000</max-backoff-millis>
+            <max-backoff-millis>300000</max-backoff-millis>
             <multiplier>1.5</multiplier>
             <jitter>0.2</jitter>
         </connection-retry>
