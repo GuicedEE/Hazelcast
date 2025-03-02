@@ -3,6 +3,8 @@ open module com.guicedee.guicedhazelcast {
 	exports com.guicedee.guicedhazelcast.services;
 	
 	requires transitive cache.annotations.ri.guice;
+
+	requires transitive com.guicedee.vertx;
 	
 	requires java.xml;
 	

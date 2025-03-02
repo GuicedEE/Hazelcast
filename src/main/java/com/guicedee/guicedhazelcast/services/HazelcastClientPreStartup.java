@@ -6,14 +6,17 @@ import com.guicedee.guicedhazelcast.HazelcastProperties;
 import com.guicedee.guicedinjection.interfaces.IGuicePreDestroy;
 import com.guicedee.guicedinjection.interfaces.IGuicePreStartup;
 import com.guicedee.guicedinjection.properties.GlobalProperties;
+import com.guicedee.vertx.spi.VertXPreStartup;
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.client.config.ClientNetworkConfig;
 import com.hazelcast.core.HazelcastInstance;
+import io.vertx.core.Future;
 import lombok.extern.java.Log;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.List;
 import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.logging.Level;
@@ -26,96 +29,100 @@ public class HazelcastClientPreStartup
 	public static ClientConfig config;
 	
 	@Override
-	public void onStartup()
+	public List<Future<Boolean>> onStartup()
 	{
 		if (clientInstance != null)
 		{
-			return;
+			return List.of(Future.succeededFuture(true));
 		}
 		if (config == null)
 		{
 			config = new ClientConfig();
 		}
-		
-		config.setProperty("hazelcast.client.shuffle.member.list", "true");
-		config.setProperty("hazelcast.client.heartbeat.timeout", "60000");
-		config.setProperty("hazelcast.client.heartbeat.interval", "5000");
-		config.setProperty("hazelcast.client.event.thread.count", "5");
-		config.setProperty("hazelcast.client.event.queue.capacity", "1000000");
-		config.setProperty("hazelcast.client.invocation.timeout.seconds", "120");
-		HazelcastProperties.setAddress(GlobalProperties.getSystemPropertyOrEnvironment("CLIENT_ADDRESS", "localhost"));
-		config.getNetworkConfig().addAddress(HazelcastProperties.getAddress());
-		HazelcastProperties.setGroupName(GlobalProperties.getSystemPropertyOrEnvironment("GROUP_NAME", "dev"));
-		
-		config.setClusterName(HazelcastProperties.getGroupName());
-		config.setInstanceName(HazelcastProperties.getGroupName());
-		
-		@SuppressWarnings("rawtypes")
-		Set<IGuicedHazelcastClientConfig> configSet = IGuiceContext
-				                                              .instance()
-				                                              .getLoader(IGuicedHazelcastClientConfig.class, true, ServiceLoader.load(IGuicedHazelcastClientConfig.class));
-		for (IGuicedHazelcastClientConfig<?> iGuicedHazelcastClientConfig : configSet)
-		{
-			config = iGuicedHazelcastClientConfig.buildConfig(config);
-		}
-		log.config("Final Hazelcast Client Configuration - " + config.toString());
-		try
-		{
-			config.addLabel(InetAddress.getLocalHost()
-							.getHostAddress());
-		} catch (UnknownHostException e)
-		{
-			log.log(Level.SEVERE, "Unable to make an inet address from localhost", e);
-		}
-		
-		if (Strings.isNullOrEmpty(config.getClusterName()))
-		{
-			config.setClusterName("dev");
-		}
-		if (Strings.isNullOrEmpty(config.getInstanceName()))
-		{
-			config.setInstanceName("dev");
-		}
-		
-		ClientNetworkConfig clientNetworkConfig = new ClientNetworkConfig();
-		if (config.getNetworkConfig() != null && config.getNetworkConfig()
-						.getAddresses() != null && !config.getNetworkConfig()
-						.getAddresses()
-						.isEmpty())
-		{
-			String addy = config.getNetworkConfig()
+
+		return List.of(
+				VertXPreStartup.getVertx().executeBlocking(() -> {
+					config.setProperty("hazelcast.client.shuffle.member.list", "true");
+					config.setProperty("hazelcast.client.heartbeat.timeout", "60000");
+					config.setProperty("hazelcast.client.heartbeat.interval", "5000");
+					config.setProperty("hazelcast.client.event.thread.count", "5");
+					config.setProperty("hazelcast.client.event.queue.capacity", "1000000");
+					config.setProperty("hazelcast.client.invocation.timeout.seconds", "120");
+					HazelcastProperties.setAddress(GlobalProperties.getSystemPropertyOrEnvironment("CLIENT_ADDRESS", "localhost"));
+					config.getNetworkConfig().addAddress(HazelcastProperties.getAddress());
+					HazelcastProperties.setGroupName(GlobalProperties.getSystemPropertyOrEnvironment("GROUP_NAME", "dev"));
+
+					config.setClusterName(HazelcastProperties.getGroupName());
+					config.setInstanceName(HazelcastProperties.getGroupName());
+
+					@SuppressWarnings("rawtypes")
+					Set<IGuicedHazelcastClientConfig> configSet = IGuiceContext
+							.instance()
+							.getLoader(IGuicedHazelcastClientConfig.class, true, ServiceLoader.load(IGuicedHazelcastClientConfig.class));
+					for (IGuicedHazelcastClientConfig<?> iGuicedHazelcastClientConfig : configSet)
+					{
+						config = iGuicedHazelcastClientConfig.buildConfig(config);
+					}
+					log.config("Final Hazelcast Client Configuration - " + config.toString());
+					try
+					{
+						config.addLabel(InetAddress.getLocalHost()
+								.getHostAddress());
+					} catch (UnknownHostException e)
+					{
+						log.log(Level.SEVERE, "Unable to make an inet address from localhost", e);
+					}
+
+					if (Strings.isNullOrEmpty(config.getClusterName()))
+					{
+						config.setClusterName("dev");
+					}
+					if (Strings.isNullOrEmpty(config.getInstanceName()))
+					{
+						config.setInstanceName("dev");
+					}
+
+					ClientNetworkConfig clientNetworkConfig = new ClientNetworkConfig();
+					if (config.getNetworkConfig() != null && config.getNetworkConfig()
+							.getAddresses() != null && !config.getNetworkConfig()
 							.getAddresses()
-							.get(0);
-			clientNetworkConfig.addAddress(addy);
-			GlobalProperties.getSystemPropertyOrEnvironment("hazelcast.socket.client.bind", addy);
-			GlobalProperties.getSystemPropertyOrEnvironment("system.hazelcast.address", addy);
-			GlobalProperties.getSystemPropertyOrEnvironment("CLIENT_ADDRESS", addy);
-		} else
-		{
-			System.getProperties()
-							.setProperty("system.hazelcast.address", "127.0.0.1");
-		}
-		if (!Strings.isNullOrEmpty(config.getClusterName()))
-		{
-			GlobalProperties.getSystemPropertyOrEnvironment("GROUP_NAME", config.getClusterName());
-			GlobalProperties.getSystemPropertyOrEnvironment("cluster.name", config.getClusterName());
-			GlobalProperties.getSystemPropertyOrEnvironment("instance.name", config.getInstanceName());
-			GlobalProperties.getSystemPropertyOrEnvironment("system.hazelcast.groupname", config.getClusterName());
-			GlobalProperties.getSystemPropertyOrEnvironment("system.hazelcast.clustername", config.getClusterName());
-			GlobalProperties.getSystemPropertyOrEnvironment("system.hazelcast.cluster_name", config.getClusterName());
-		}
-		GlobalProperties.getSystemPropertyOrEnvironment("hazelcast.jcache.provider.type", "client");
-		
-		//TODO this requires more than a blind code implmementation
-		config.setInstanceName(config.getInstanceName());
-		clientInstance = HazelcastClient.getOrCreateHazelcastClient(config);
-		
+							.isEmpty())
+					{
+						String addy = config.getNetworkConfig()
+								.getAddresses()
+								.get(0);
+						clientNetworkConfig.addAddress(addy);
+						GlobalProperties.getSystemPropertyOrEnvironment("hazelcast.socket.client.bind", addy);
+						GlobalProperties.getSystemPropertyOrEnvironment("system.hazelcast.address", addy);
+						GlobalProperties.getSystemPropertyOrEnvironment("CLIENT_ADDRESS", addy);
+					} else
+					{
+						System.getProperties()
+								.setProperty("system.hazelcast.address", "127.0.0.1");
+					}
+					if (!Strings.isNullOrEmpty(config.getClusterName()))
+					{
+						GlobalProperties.getSystemPropertyOrEnvironment("GROUP_NAME", config.getClusterName());
+						GlobalProperties.getSystemPropertyOrEnvironment("cluster.name", config.getClusterName());
+						GlobalProperties.getSystemPropertyOrEnvironment("instance.name", config.getInstanceName());
+						GlobalProperties.getSystemPropertyOrEnvironment("system.hazelcast.groupname", config.getClusterName());
+						GlobalProperties.getSystemPropertyOrEnvironment("system.hazelcast.clustername", config.getClusterName());
+						GlobalProperties.getSystemPropertyOrEnvironment("system.hazelcast.cluster_name", config.getClusterName());
+					}
+					GlobalProperties.getSystemPropertyOrEnvironment("hazelcast.jcache.provider.type", "client");
+
+					//TODO this requires more than a blind code implmementation
+					config.setInstanceName(config.getInstanceName());
+					clientInstance = HazelcastClient.getOrCreateHazelcastClient(config);
+					return true;
+				})
+		);
 	}
 	
 	@Override
 	public Integer sortOrder()
 	{
-		return 46;
+		return Integer.MIN_VALUE + 71;
 	}
 	
 	@Override
