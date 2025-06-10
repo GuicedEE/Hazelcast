@@ -8,41 +8,35 @@ import com.hazelcast.config.InvalidConfigurationException;
 import com.hazelcast.core.HazelcastInstance;
 import org.apache.commons.lang3.RandomUtils;
 
-import java.util.Random;
-
-import static com.guicedee.guicedhazelcast.services.HazelcastClientPreStartup.*;
+import static com.guicedee.guicedhazelcast.services.HazelcastClientPreStartup.clientInstance;
+import static com.guicedee.guicedhazelcast.services.HazelcastClientPreStartup.config;
 
 public class HazelcastClientProvider
-		implements Provider<HazelcastInstance>, IGuicePreDestroy<HazelcastClientProvider>
+        implements Provider<HazelcastInstance>, IGuicePreDestroy<HazelcastClientProvider>
 {
 
-	@Override
-	public HazelcastInstance get()
-	{
-		//Only start a client instance if i didn't start a local one
-		if (ModuleLayer.boot()
-		               .findModule("za.co.bayport.jpms.caching")
-		               .isEmpty())
-		{
-			try
-			{
-				clientInstance = HazelcastClient.newHazelcastClient(config);
-			}catch (ProvisionException | InvalidConfigurationException pe)
-			{
-				config.setInstanceName(config.getInstanceName() + "_" + RandomUtils.nextInt(1, 100));
-				clientInstance = HazelcastClient.newHazelcastClient(config);
-			}
-		}
-		return clientInstance;
-	}
+    @Override
+    public HazelcastInstance get()
+    {
+        try
+        {
+            clientInstance = HazelcastClient.newHazelcastClient(config);
+        }
+        catch (ProvisionException | InvalidConfigurationException pe)
+        {
+            config.setInstanceName(config.getInstanceName() + "_" + RandomUtils.nextInt(1, 100));
+            clientInstance = HazelcastClient.newHazelcastClient(config);
+        }
+        return clientInstance;
+    }
 
-	@Override
-	public void onDestroy()
-	{
-		if (clientInstance != null)
-		{
-			clientInstance.shutdown();
-			clientInstance = null;
-		}
-	}
+    @Override
+    public void onDestroy()
+    {
+        if (clientInstance != null)
+        {
+            clientInstance.shutdown();
+            clientInstance = null;
+        }
+    }
 }
