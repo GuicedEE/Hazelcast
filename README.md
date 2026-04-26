@@ -2,7 +2,7 @@
 
 [![Build](https://github.com/GuicedEE/GuicedHazelcast/actions/workflows/build.yml/badge.svg)](https://github.com/GuicedEE/GuicedHazelcast/actions/workflows/build.yml)
 [![Maven Central](https://img.shields.io/maven-central/v/com.guicedee/hazelcast)](https://central.sonatype.com/artifact/com.guicedee/hazelcast)
-[![Maven Snapshot](https://img.shields.io/nexus/s/com.guicedee/hazelcast?server=https%3A%2F%2Foss.sonatype.org&label=Maven%20Snapshot)](https://oss.sonatype.org/content/repositories/snapshots/com/guicedee/hazelcast/)
+[![Snapshot](https://img.shields.io/badge/Snapshot-2.0.0-SNAPSHOT-orange)](https://github.com/GuicedEE/Packages/packages/maven/com.guicedee.hazelcast)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue)](https://www.apache.org/licenses/LICENSE-2.0)
 
 ![Java 25+](https://img.shields.io/badge/Java-25%2B-green)
@@ -125,30 +125,50 @@ IGuiceContext.instance().inject();
 
 ## 📐 Architecture
 
-```
-Startup
-  IGuiceContext.instance()
-   └─ HazelcastPreStartup            (IGuicePreStartup — server annotation scanning, sort=MIN+70)
-       ├─ Discovers @HazelcastServerOptions (classes and package-info.java)
-       ├─ Wraps with environment variable resolution (HAZELCAST_*)
-       ├─ Applies SPI hooks (IGuicedHazelcastServerConfig)
-       └─ Starts embedded instance if startLocal=true
-   └─ HazelcastClientPreStartup      (IGuicePreStartup — client annotation scanning, sort=MIN+71)
-       ├─ Discovers @HazelcastClientOptions
-       ├─ Wraps with environment variable resolution (HAZELCAST_CLIENT_*)
-       ├─ Applies SPI hooks (IGuicedHazelcastClientConfig)
-       └─ Connects to remote cluster
-   └─ HazelcastBinderGuice           (IGuiceModule — Guice bindings)
-       ├─ Binds HazelcastInstance singleton (via HazelcastClientProvider)
-       ├─ Binds CachingProvider and CacheManager (JCache)
-       └─ Installs CacheAnnotationsModule (@CacheResult, @CachePut, @CacheRemove)
-   └─ HazelcastClusterConfigurator   (VertxConfigurator SPI — Vert.x cluster manager)
-       └─ Configures Vert.x to use HazelcastClusterManager (triggers buildClustered())
-
-Shutdown
-   └─ HazelcastPreDestroy            (IGuicePreDestroy — shutdown, sort=MAX-100)
-       ├─ Shuts down client instance
-       └─ Shuts down server instance
+```mermaid
+flowchart TD
+    n1["Startup"]
+    n2["IGuiceContext.instance()"]
+    n1 --> n2
+    n3["HazelcastPreStartup<br/>IGuicePreStartup — server annotation scanning, sort=MIN+70"]
+    n2 --> n3
+    n4["Discovers @HazelcastServerOptions<br/>classes and package-info.java"]
+    n3 --> n4
+    n5["Wraps with environment variable resolution<br/>HAZELCAST_*"]
+    n3 --> n5
+    n6["Applies SPI hooks<br/>IGuicedHazelcastServerConfig"]
+    n3 --> n6
+    n7["Starts embedded instance if startLocal=true"]
+    n3 --> n7
+    n8["HazelcastClientPreStartup<br/>IGuicePreStartup — client annotation scanning, sort=MIN+71"]
+    n2 --> n8
+    n9["Discovers @HazelcastClientOptions"]
+    n8 --> n9
+    n10["Wraps with environment variable resolution<br/>HAZELCAST_CLIENT_*"]
+    n8 --> n10
+    n11["Applies SPI hooks<br/>IGuicedHazelcastClientConfig"]
+    n8 --> n11
+    n12["Connects to remote cluster"]
+    n8 --> n12
+    n13["HazelcastBinderGuice<br/>IGuiceModule — Guice bindings"]
+    n2 --> n13
+    n14["Binds HazelcastInstance singleton<br/>via HazelcastClientProvider"]
+    n13 --> n14
+    n15["Binds CachingProvider and CacheManager<br/>JCache"]
+    n13 --> n15
+    n16["Installs CacheAnnotationsModule<br/>@CacheResult, @CachePut, @CacheRemove"]
+    n13 --> n16
+    n17["HazelcastClusterConfigurator<br/>VertxConfigurator SPI — Vert.x cluster manager"]
+    n2 --> n17
+    n18["Configures Vert.x to use HazelcastClusterManager<br/>triggers buildClustered()"]
+    n17 --> n18
+    n19["Shutdown"]
+    n20["HazelcastPreDestroy<br/>IGuicePreDestroy — shutdown, sort=MAX-100"]
+    n19 --> n20
+    n21["Shuts down client instance"]
+    n20 --> n21
+    n22["Shuts down server instance"]
+    n20 --> n22
 ```
 
 ## 🔧 Annotations
@@ -306,15 +326,16 @@ public class MyClientConfig implements IGuicedHazelcastClientConfig<MyClientConf
 
 ## 🗺️ Module Graph
 
-```
-com.guicedee.guicedhazelcast
- ├── com.hazelcast.all                       (Hazelcast runtime)
- ├── io.vertx.clustermanager.hazelcast       (Vert.x Hazelcast cluster manager)
- ├── cache.annotations.ri.guice             (JCache annotation support)
- ├── com.guicedee.vertx                      (Vert.x lifecycle)
- ├── com.guicedee.client                     (GuicedEE SPI contracts)
- ├── io.github.classgraph                    (annotation scanning)
- └── org.apache.commons.lang3                (StringUtils)
+```mermaid
+flowchart LR
+    com_guicedee_guicedhazelcast["com.guicedee.guicedhazelcast"]
+    com_guicedee_guicedhazelcast --> com_hazelcast_all["com.hazelcast.all<br/>Hazelcast runtime"]
+    com_guicedee_guicedhazelcast --> io_vertx_clustermanager_hazelcast["io.vertx.clustermanager.hazelcast<br/>Vert.x Hazelcast cluster manager"]
+    com_guicedee_guicedhazelcast --> cache_annotations_ri_guice["cache.annotations.ri.guice<br/>JCache annotation support"]
+    com_guicedee_guicedhazelcast --> com_guicedee_vertx["com.guicedee.vertx<br/>Vert.x lifecycle"]
+    com_guicedee_guicedhazelcast --> com_guicedee_client["com.guicedee.client<br/>GuicedEE SPI contracts"]
+    com_guicedee_guicedhazelcast --> io_github_classgraph["io.github.classgraph<br/>annotation scanning"]
+    com_guicedee_guicedhazelcast --> org_apache_commons_lang3["org.apache.commons.lang3<br/>StringUtils"]
 ```
 
 ## 🧩 JPMS
