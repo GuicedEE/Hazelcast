@@ -1,68 +1,57 @@
 package com.guicedee.guicedhazelcast.tests;
 
-import com.guicedee.client.*;
+import com.guicedee.client.IGuiceContext;
 import com.guicedee.guicedhazelcast.HazelcastProperties;
+import com.guicedee.guicedhazelcast.services.HazelcastPreStartup;
+import com.hazelcast.core.HazelcastInstance;
 
-import javax.cache.annotation.CacheKey;
-import javax.cache.annotation.CacheResult;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class HazelcastBinderTest
 {
+    @BeforeAll
+    static void init()
+    {
+        HazelcastProperties.setStartLocal(true);
+        System.setProperty("GROUP_NAME", "test");
+        IGuiceContext.registerModule("com.guicedee.guicedhazelcast.tests");
+        IGuiceContext.instance().inject();
+    }
 
-	private HazelcastBinderTest test;
+    @AfterAll
+    static void destroy()
+    {
+        IGuiceContext.instance().destroy();
+    }
 
-	private String returnTest = "Not this one";
+    @Test
+    @Order(1)
+    void testHazelcastInstanceBound()
+    {
+        HazelcastInstance instance = IGuiceContext.get(HazelcastInstance.class);
+        assertNotNull(instance, "HazelcastInstance should be bound");
+    }
 
-	@Test
-	public void testCaching()
-	{
-		HazelcastProperties.setStartLocal(true);
-		
-		System.setProperty("GROUP_NAME", "test");
-		
-		HazelcastBinderTest c = IGuiceContext.get(HazelcastBinderTest.class);
-		test = c;
-		System.out.println(test.test("1"));
-		System.out.println(test.test("2"));
-		System.out.println(test.test("Cache Test"));
+    @Test
+    @Order(2)
+    void testServerInstanceStarted()
+    {
+        assertNotNull(HazelcastPreStartup.getInstance(), "Server instance should be started in local mode");
+        assertEquals("test", HazelcastPreStartup.getConfig().getClusterName());
+    }
 
-		test.returnTest = "Test the Cache Pull";
-
-		String result = test.test("Cache Test");
-		System.out.println("Output from cache : " + test.test("Cache Test"));
-		System.out.println("Output from result : " + test.test("Cache Test"));
-
-		assertEquals("Not this one", test.test("Cache Test"));
-
-		String shouldBeCached = test.test("Cache Test");
-
-		if (shouldBeCached
-				    .equals(test.returnTest))
-		{
-			Assertions.fail("Cache is not being hit");
-		}
-		else
-		{
-
-		}
-	}
-
-	@CacheResult
-	public String test(@CacheKey String key)
-	{
-		switch (key)
-		{
-			case "1":
-				return "One";
-			case "2":
-				return "Two";
-			default:
-				return returnTest;
-		}
-	}
+    @Test
+    @Order(3)
+    void testHazelcastDistributedMap()
+    {
+        HazelcastInstance instance = IGuiceContext.get(HazelcastInstance.class);
+        var map = instance.getMap("test-map");
+        map.put("key1", "value1");
+        assertEquals("value1", map.get("key1"));
+        map.remove("key1");
+        assertNull(map.get("key1"));
+    }
 }
-

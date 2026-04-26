@@ -1,34 +1,35 @@
-open module com.guicedee.guicedhazelcast {
-	exports com.guicedee.guicedhazelcast;
-	exports com.guicedee.guicedhazelcast.services;
-	
-	requires transitive cache.annotations.ri.guice;
+import com.guicedee.client.services.lifecycle.IGuiceModule;
+import com.guicedee.client.services.lifecycle.IGuicePreDestroy;
+import com.guicedee.client.services.lifecycle.IGuicePreStartup;
+import com.guicedee.guicedhazelcast.implementations.*;
+import com.guicedee.guicedhazelcast.services.*;
 
-	requires transitive com.guicedee.vertx;
-	
-	requires java.xml;
-	
-	requires static lombok;
-	
-	requires transitive com.hazelcast.all;
-	requires org.apache.commons.io;
-	
-	requires transitive com.guicedee.client;
-	requires org.apache.commons.lang3;
-	
-	uses com.guicedee.guicedhazelcast.services.IGuicedHazelcastClientConfig;
-	uses com.guicedee.guicedhazelcast.services.IGuicedHazelcastServerConfig;
-	
-	provides com.guicedee.guicedinjection.interfaces.IGuicePreDestroy with com.guicedee.guicedhazelcast.implementations.HazelcastClientProvider, com.guicedee.guicedhazelcast.services.HazelcastPreStartup, com.guicedee.guicedhazelcast.services.HazelcastClientPreStartup;
-	provides com.guicedee.guicedinjection.interfaces.IGuiceModule with com.guicedee.guicedhazelcast.implementations.HazelcastBinderGuice;
-	
-	provides com.guicedee.guicedinjection.interfaces.IGuicePreStartup with com.guicedee.guicedhazelcast.services.HazelcastPreStartup, com.guicedee.guicedhazelcast.services.HazelcastClientPreStartup;
-	
-	//opens com.guicedee.guicedhazelcast to com.google.guice;
-	//opens com.guicedee.guicedhazelcast.annotations to com.google.guice;
-	
-	exports com.guicedee.guicedhazelcast.implementations;
-	//opens com.guicedee.guicedhazelcast.implementations to com.google.guice;
-	
-	//opens com.guicedee.guicedhazelcast.services to com.google.guice;
+module com.guicedee.guicedhazelcast {
+    exports com.guicedee.guicedhazelcast;
+    exports com.guicedee.guicedhazelcast.services;
+    exports com.guicedee.guicedhazelcast.implementations;
+
+    requires transitive cache.annotations.ri.guice;
+    requires transitive com.guicedee.vertx;
+    requires transitive com.hazelcast.all;
+    requires transitive io.vertx.clustermanager.hazelcast;
+
+    requires java.xml;
+    requires static lombok;
+    requires io.github.classgraph;
+
+    requires transitive com.guicedee.client;
+    requires org.apache.commons.lang3;
+
+    uses com.guicedee.guicedhazelcast.services.IGuicedHazelcastClientConfig;
+    uses com.guicedee.guicedhazelcast.services.IGuicedHazelcastServerConfig;
+
+    provides IGuicePreDestroy with HazelcastPreDestroy;
+    provides IGuiceModule with HazelcastBinderGuice;
+    provides IGuicePreStartup with HazelcastPreStartup, HazelcastClientPreStartup;
+    provides com.guicedee.vertx.spi.VertxConfigurator with HazelcastClusterConfigurator;
+
+    opens com.guicedee.guicedhazelcast to com.google.guice, com.fasterxml.jackson.databind;
+    opens com.guicedee.guicedhazelcast.implementations to com.google.guice, com.fasterxml.jackson.databind;
+    opens com.guicedee.guicedhazelcast.services to com.google.guice, com.fasterxml.jackson.databind;
 }

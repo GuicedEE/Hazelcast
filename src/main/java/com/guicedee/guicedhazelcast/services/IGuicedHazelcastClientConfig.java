@@ -1,20 +1,18 @@
 package com.guicedee.guicedhazelcast.services;
 
-import com.guicedee.guicedinjection.interfaces.IDefaultService;
+import com.guicedee.client.services.IDefaultService;
 import com.hazelcast.client.config.ClientConfig;
 
 /**
- * Configures the client config when called upon
+ * SPI for configuring the Hazelcast client configuration.
  */
 public interface IGuicedHazelcastClientConfig<J extends IGuicedHazelcastClientConfig<J>> extends IDefaultService<J>
 {
-	/**
-	 * Sets up the configuration suite
-	 *
-	 * @param clientConfig
-	 * 		The incoming and current configuration of the client ocnfiguration
-	 *
-	 * @return Whatever config you want..
-	 */
-	ClientConfig buildConfig(ClientConfig clientConfig);
+    /**
+     * Customizes the Hazelcast client configuration.
+     *
+     * @param clientConfig The current client configuration.
+     * @return The modified client configuration.
+     */
+    ClientConfig buildConfig(ClientConfig clientConfig);
 }
