@@ -26,7 +26,7 @@ Built on [Hazelcast](https://hazelcast.com/) · [Vert.x Hazelcast Cluster Manage
 <summary>Gradle (Kotlin DSL)</summary>
 
 ```kotlin
-implementation("com.guicedee:hazelcast:2.0.1")
+implementation("com.guicedee:hazelcast:2.0.2-SNAPSHOT")
 ```
 </details>
 
