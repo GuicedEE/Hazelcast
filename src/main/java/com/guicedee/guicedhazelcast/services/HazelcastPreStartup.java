@@ -130,7 +130,6 @@ public class HazelcastPreStartup implements IGuicePreStartup<HazelcastPreStartup
     /**
      * Wraps the annotation with environment variable resolution.
      */
-    @SuppressWarnings("unchecked")
     private HazelcastServerOptions wrapServerOptions(HazelcastServerOptions ann)
     {
         return new HazelcastServerOptions()
