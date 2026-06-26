@@ -29,7 +29,7 @@ module com.guicedee.guicedhazelcast {
     provides IGuicePreStartup with HazelcastPreStartup, HazelcastClientPreStartup;
     provides com.guicedee.vertx.spi.VertxConfigurator with HazelcastClusterConfigurator;
 
-    opens com.guicedee.guicedhazelcast to com.google.guice, com.fasterxml.jackson.databind;
-    opens com.guicedee.guicedhazelcast.implementations to com.google.guice, com.fasterxml.jackson.databind;
-    opens com.guicedee.guicedhazelcast.services to com.google.guice, com.fasterxml.jackson.databind;
+    opens com.guicedee.guicedhazelcast to com.google.guice, tools.jackson.databind;
+    opens com.guicedee.guicedhazelcast.implementations to com.google.guice, tools.jackson.databind;
+    opens com.guicedee.guicedhazelcast.services to com.google.guice, tools.jackson.databind;
 }
