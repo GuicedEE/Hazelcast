@@ -45,10 +45,6 @@
         </dependency>
         <dependency>
             <groupId>com.guicedee</groupId>
-            <artifactId>client</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.guicedee</groupId>
             <artifactId>vertx</artifactId>
         </dependency>
         <dependency>

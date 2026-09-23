@@ -16,9 +16,7 @@ module com.guicedee.guicedhazelcast {
 
     requires java.xml;
     requires static lombok;
-    requires io.github.classgraph;
 
-    requires transitive com.guicedee.client;
     requires org.apache.commons.lang3;
 
     uses com.guicedee.guicedhazelcast.services.IGuicedHazelcastClientConfig;
