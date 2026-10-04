@@ -37,6 +37,11 @@ public class HazelcastClientPreStartup implements IGuicePreStartup<HazelcastClie
     @Override
     public List<Future<Boolean>> onStartup()
     {
+        discoverClientOptions(IGuiceContext.instance().getScanResult());
+        boolean intentional = clientOptions != null || !IGuiceContext.instance().getLoader(
+                IGuicedHazelcastClientConfig.class, true, ServiceLoader.load(IGuicedHazelcastClientConfig.class)).isEmpty();
+        if (!Boolean.parseBoolean(Environment.getSystemPropertyOrEnvironment("HAZELCAST_CLIENT_ENABLED", Boolean.toString(intentional))))
+            return List.of(Future.succeededFuture(true));
         if (clientInstance != null)
         {
             return List.of(Future.succeededFuture(true));

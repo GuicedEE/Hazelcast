@@ -131,6 +131,9 @@ public @interface HazelcastServerOptions
      */
     boolean startLocal() default false;
 
+    /** Enable the Vert.x cluster. Overridden by VERTX_CLUSTER_ENABLED. */
+    boolean clustered() default true;
+
     // ── Heartbeat ────────────────────────────────────
 
     /**

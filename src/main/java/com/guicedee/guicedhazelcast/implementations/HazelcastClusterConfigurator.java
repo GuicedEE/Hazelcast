@@ -26,25 +26,34 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class HazelcastClusterConfigurator implements ClusterVertxConfigurator
 {
+    private static volatile HazelcastClusterManager manager;
+
+    @Override public boolean enabled() { return HazelcastPreStartup.clusterEnabled(); }
+
+    public static com.hazelcast.core.HazelcastInstance member() {
+        var instance = HazelcastPreStartup.getInstance() != null ? HazelcastPreStartup.getInstance()
+                : manager == null ? null : manager.getHazelcastInstance();
+        return instance != null && instance.getLifecycleService().isRunning() ? instance : null;
+    }
+
     @Override
     public ClusterManager getClusterManager()
     {
         if (HazelcastPreStartup.getInstance() != null)
         {
             log.info("Using existing Hazelcast instance for Vert.x cluster manager");
-            return new HazelcastClusterManager(HazelcastPreStartup.getInstance());
+            return manager = new HazelcastClusterManager(HazelcastPreStartup.getInstance());
         }
 
-        Config config = HazelcastPreStartup.getConfig();
+        Config config = HazelcastPreStartup.prepare();
         if (config != null)
         {
             log.info("Creating Vert.x Hazelcast cluster manager with server config (cluster={})",
                     config.getClusterName());
-            return new HazelcastClusterManager(config);
+            return manager = new HazelcastClusterManager(config);
         }
 
-        log.info("Creating Vert.x Hazelcast cluster manager with default config");
-        return new HazelcastClusterManager();
+        throw new IllegalStateException("Hazelcast configuration unavailable");
     }
 
     @Override

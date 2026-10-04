@@ -32,68 +32,74 @@ public class HazelcastPreStartup implements IGuicePreStartup<HazelcastPreStartup
     @Getter
     private static HazelcastServerOptions serverOptions;
 
-    @Override
-    public List<Future<Boolean>> onStartup()
-    {
-        if (config == null)
-        {
-            config = new Config();
+    /** Prepare once, without depending on an already running Vert.x. */
+    public static synchronized Config prepare() {
+        if (config != null) return config;
+        var startup = new HazelcastPreStartup();
+        startup.discoverServerOptions(IGuiceContext.instance().getScanResult());
+        Config prepared = io.vertx.spi.cluster.hazelcast.ConfigUtil.loadConfig();
+        if (serverOptions != null) applyServerOptions(prepared, serverOptions);
+        else {
+            String name = Environment.getSystemPropertyOrEnvironment("HAZELCAST_CLUSTER_NAME",
+                    Environment.getSystemPropertyOrEnvironment("GROUP_NAME", "guicedee-local"));
+            prepared.setClusterName(name);
+            prepared.getNetworkConfig().getJoin().getMulticastConfig().setEnabled(false);
+            prepared.getNetworkConfig().getJoin().getAutoDetectionConfig().setEnabled(false);
         }
-        if (config.getNetworkConfig() == null)
-        {
-            config.setNetworkConfig(new NetworkConfig());
+        Set<IGuicedHazelcastServerConfig> hooks = IGuiceContext.instance().getLoader(
+                IGuicedHazelcastServerConfig.class, true, ServiceLoader.load(IGuicedHazelcastServerConfig.class));
+        for (IGuicedHazelcastServerConfig<?> hook : hooks) prepared = hook.buildConfig(prepared);
+        // GuicedEE owns external members; Vert.x owns members created by its manager.
+        prepared.setProperty("hazelcast.shutdownhook.enabled", "false");
+        prepared.getMemberAttributeConfig().setAttribute("__vertx.nodeId", java.util.UUID.randomUUID().toString());
+        config = prepared;
+        return config;
+    }
+
+    /** An incidental dependency must not join a cluster. Explicit existing declarations retain activation. */
+    public static boolean clusterEnabled() {
+        prepare();
+        String configured = Environment.getSystemPropertyOrEnvironment("VERTX_CLUSTER_ENABLED", null);
+        if (configured != null && !configured.isBlank()) {
+            if (!configured.equalsIgnoreCase("true") && !configured.equalsIgnoreCase("false"))
+                throw new IllegalArgumentException("VERTX_CLUSTER_ENABLED must be true or false");
+            return Boolean.parseBoolean(configured);
         }
+        return serverOptions != null ? serverOptions.clustered() : HazelcastProperties.isStartLocal()
+                || !IGuiceContext.instance().getLoader(IGuicedHazelcastServerConfig.class, true,
+                    ServiceLoader.load(IGuicedHazelcastServerConfig.class)).isEmpty();
+    }
 
-        return List.of(VertXPreStartup.getVertx().executeBlocking(() -> {
-            // Scan for @HazelcastServerOptions on classes and package-info
-            ScanResult scanResult = IGuiceContext.instance().getScanResult();
-            discoverServerOptions(scanResult);
-
-            // Apply annotation-driven configuration (if found)
-            if (serverOptions != null)
-            {
-                applyServerOptions(config, serverOptions);
+    @Override public List<Future<Boolean>> onStartup() {
+        try {
+            Config prepared = prepare();
+            prepared.setProperty("hazelcast.shutdownhook.enabled", "false");
+            prepared.getMultiMapConfig("__vertx.subs").setValueCollectionType(com.hazelcast.config.MultiMapConfig.ValueCollectionType.SET);
+            if (prepared.getMemberAttributeConfig().getAttribute("__vertx.nodeId") == null)
+                prepared.getMemberAttributeConfig().setAttribute("__vertx.nodeId", java.util.UUID.randomUUID().toString());
+            boolean local = serverOptions != null ? serverOptions.startLocal() : HazelcastProperties.isStartLocal();
+            if (local && instance == null) {
+                // No Vert.x exists yet. The lifecycle awaits this dedicated virtual thread.
+                var result = new java.util.concurrent.CompletableFuture<Boolean>();
+                Thread.startVirtualThread(() -> {
+                    try {
+                        synchronized (HazelcastPreStartup.class) {
+                            if (instance == null) instance = Hazelcast.newHazelcastInstance(prepared);
+                        }
+                        result.complete(true);
+                    } catch (Throwable failure) { result.completeExceptionally(failure); }
+                });
+                return List.of(Future.fromCompletionStage(result));
             }
-            else
-            {
-                // Fallback to old env-based config
-                HazelcastProperties.setAddress(Environment.getSystemPropertyOrEnvironment("CLIENT_ADDRESS", "localhost"));
-                config.getNetworkConfig().setPublicAddress(HazelcastProperties.getAddress());
-                HazelcastProperties.setGroupName(Environment.getSystemPropertyOrEnvironment("GROUP_NAME", "dev"));
-                config.setClusterName(HazelcastProperties.getGroupName());
-                config.setInstanceName(HazelcastProperties.getGroupName());
-            }
-
-            // Run SPI hooks for programmatic customization
-            @SuppressWarnings("rawtypes")
-            Set<IGuicedHazelcastServerConfig> configSet = IGuiceContext
-                    .instance()
-                    .getLoader(IGuicedHazelcastServerConfig.class, true, ServiceLoader.load(IGuicedHazelcastServerConfig.class));
-            for (IGuicedHazelcastServerConfig<?> spiConfig : configSet)
-            {
-                config = spiConfig.buildConfig(config);
-            }
-
-            // Start local instance if requested
-            boolean shouldStartLocal = serverOptions != null ? serverOptions.startLocal() : HazelcastProperties.isStartLocal();
-            if (shouldStartLocal)
-            {
-                log.info("Starting embedded Hazelcast instance (cluster={})", config.getClusterName());
-                if (serverOptions != null && serverOptions.joinType() == HazelcastServerOptions.JoinType.NONE)
-                {
-                    config.getNetworkConfig().getJoin().getMulticastConfig().setEnabled(false);
-                    config.getNetworkConfig().getJoin().getAutoDetectionConfig().setEnabled(false);
-                }
-                instance = Hazelcast.getOrCreateHazelcastInstance(config);
-            }
-            return true;
-        }));
+            return List.of(Future.succeededFuture(true));
+        } catch (Throwable failure) { return List.of(Future.failedFuture(failure)); }
     }
 
     private void discoverServerOptions(ScanResult scanResult)
     {
         // Check classes
         ClassInfoList annotatedClasses = scanResult.getClassesWithAnnotation(HazelcastServerOptions.class);
+        if (annotatedClasses.size() > 1) throw new IllegalStateException("Only one @HazelcastServerOptions class may be defined");
         for (var ci : annotatedClasses)
         {
             var ann = ci.loadClass().getAnnotation(HazelcastServerOptions.class);
@@ -159,6 +165,7 @@ public class HazelcastPreStartup implements IGuicePreStartup<HazelcastPreStartup
             @Override public String kubernetesNamespace() { return env("KUBERNETES_NAMESPACE", ann.kubernetesNamespace()); }
 
             @Override public boolean liteMember() { return Boolean.parseBoolean(env("LITE_MEMBER", String.valueOf(ann.liteMember()))); }
+            @Override public boolean clustered() { return ann.clustered(); }
             @Override public boolean startLocal() { return Boolean.parseBoolean(env("START_LOCAL", String.valueOf(ann.startLocal()))); }
             @Override public int maxNoHeartbeatSeconds() { return Integer.parseInt(env("MAX_NO_HEARTBEAT_SECONDS", String.valueOf(ann.maxNoHeartbeatSeconds()))); }
             @Override public int cpMemberCount() { return Integer.parseInt(env("CP_MEMBER_COUNT", String.valueOf(ann.cpMemberCount()))); }
@@ -178,7 +185,7 @@ public class HazelcastPreStartup implements IGuicePreStartup<HazelcastPreStartup
         }
         else
         {
-            config.setInstanceName(opts.clusterName());
+            config.setInstanceName(opts.clusterName() + "-" + java.util.UUID.randomUUID());
         }
 
         // Also update HazelcastProperties for backward compat
@@ -214,7 +221,10 @@ public class HazelcastPreStartup implements IGuicePreStartup<HazelcastPreStartup
 
         // Join configuration
         JoinConfig join = network.getJoin();
-        join.getAutoDetectionConfig().setEnabled(opts.autoDetection());
+        join.getAutoDetectionConfig().setEnabled(opts.joinType() == HazelcastServerOptions.JoinType.MULTICAST && opts.autoDetection());
+        join.getMulticastConfig().setEnabled(false);
+        join.getTcpIpConfig().setEnabled(false);
+        join.getKubernetesConfig().setEnabled(false);
 
         switch (opts.joinType())
         {
@@ -302,6 +312,6 @@ public class HazelcastPreStartup implements IGuicePreStartup<HazelcastPreStartup
     @Override
     public Integer sortOrder()
     {
-        return Integer.MIN_VALUE + 70;
+        return Integer.MIN_VALUE + 37;
     }
 }

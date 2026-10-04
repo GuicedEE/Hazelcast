@@ -15,6 +15,19 @@ public class HazelcastBinderTest
     @BeforeAll
     static void init()
     {
+        System.setProperty("VERTX_CLUSTER_ENABLED", "true");
+        System.setProperty("HAZELCAST_CLIENT_ENABLED", "false");
+        System.setProperty("hazelcast.jcache.provider.type", "server");
+        var isolated = new com.hazelcast.config.Config();
+        isolated.setClusterName("test");
+        isolated.getNetworkConfig().setPort(0);
+        isolated.getNetworkConfig().getInterfaces().setEnabled(true).addInterface("127.0.0.1");
+        isolated.getNetworkConfig().getJoin().getMulticastConfig().setEnabled(false);
+        isolated.getNetworkConfig().getJoin().getAutoDetectionConfig().setEnabled(false);
+        isolated.setProperty("hazelcast.operation.thread.count", "2");
+        isolated.setProperty("hazelcast.operation.generic.thread.count", "2");
+        isolated.setProperty("hazelcast.shutdownhook.enabled", "false");
+        HazelcastPreStartup.config = isolated;
         HazelcastProperties.setStartLocal(true);
         System.setProperty("GROUP_NAME", "test");
         IGuiceContext.registerModule("com.guicedee.guicedhazelcast.tests");
@@ -32,7 +45,12 @@ public class HazelcastBinderTest
     void testHazelcastInstanceBound()
     {
         HazelcastInstance instance = IGuiceContext.get(HazelcastInstance.class);
-        assertNotNull(instance, "HazelcastInstance should be bound");
+        assertSame(HazelcastPreStartup.getInstance(), instance);
+        assertEquals(1, com.hazelcast.core.Hazelcast.getAllHazelcastInstances().size());
+        var provider = IGuiceContext.get(javax.cache.spi.CachingProvider.class);
+        var manager = IGuiceContext.get(javax.cache.CacheManager.class);
+        assertSame(manager, provider.getCacheManager());
+        assertEquals(1, com.hazelcast.core.Hazelcast.getAllHazelcastInstances().size(), "JCache must reuse the lifecycle member");
     }
 
     @Test
