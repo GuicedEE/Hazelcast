@@ -1,5 +1,7 @@
 package com.guicedee.guicedhazelcast.services;
 
+import com.guicedee.client.utils.ClassLoading;
+
 import com.google.common.base.Strings;
 import com.guicedee.client.Environment;
 import com.guicedee.client.IGuiceContext;
@@ -120,7 +122,7 @@ public class HazelcastClientPreStartup implements IGuicePreStartup<HazelcastClie
         ClassInfoList annotatedClasses = scanResult.getClassesWithAnnotation(HazelcastClientOptions.class);
         for (var ci : annotatedClasses)
         {
-            var ann = ci.loadClass().getAnnotation(HazelcastClientOptions.class);
+            var ann = ClassLoading.loadClass(ci).getAnnotation(HazelcastClientOptions.class);
             if (ann != null)
             {
                 clientOptions = wrapClientOptions(ann);

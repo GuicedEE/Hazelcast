@@ -1,5 +1,7 @@
 package com.guicedee.guicedhazelcast.services;
 
+import com.guicedee.client.utils.ClassLoading;
+
 import com.guicedee.client.Environment;
 import com.guicedee.client.IGuiceContext;
 import com.guicedee.client.services.lifecycle.IGuicePreStartup;
@@ -102,7 +104,7 @@ public class HazelcastPreStartup implements IGuicePreStartup<HazelcastPreStartup
         if (annotatedClasses.size() > 1) throw new IllegalStateException("Only one @HazelcastServerOptions class may be defined");
         for (var ci : annotatedClasses)
         {
-            var ann = ci.loadClass().getAnnotation(HazelcastServerOptions.class);
+            var ann = ClassLoading.loadClass(ci).getAnnotation(HazelcastServerOptions.class);
             if (ann != null)
             {
                 serverOptions = wrapServerOptions(ann);
